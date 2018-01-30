@@ -54,7 +54,9 @@ ggplot(data = Carseats, aes(x = Sales)) +
 ```
 
 aes stands for aesthetic. mapping sales to sample.
+
 geom says what do we want to do with that mapping? qq plot, above histogram
+
 facet grid is whether side by side or one on top of the other
 
 ```{r}
@@ -78,4 +80,24 @@ CI
 ```
 
 The 95\% CI is $(`r CI[1]`, `r CI[2]`)$
-above is a way to type r code into document
+This is how to type r code into the document.
+
+Chi Squared distribution with 8 degrees of freedom.
+
+freq = FALSE makes it a density and not a frequency plot.
+
+breaks = scott is just an algorithm, specifies width of bins based on a lot of stuff
+```{r}
+sims <- 10^4
+n <- 9
+sigma2 <- 15
+mu <- 100
+chi2<- numeric(sims)
+for (i in 1:sims) {
+  stuff <- rnorm(n, mu, sigma2)
+  chi2[i] <- (n-1)*var(stuff)/(sigma2^2)
+}
+hist(chi2, breaks = "scott", freq = FALSE, col = "peachpuff")
+curve(dchisq(x, 8), add = TRUE, col = "springgreen")
+```
+
