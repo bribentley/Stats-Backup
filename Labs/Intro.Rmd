@@ -1,12 +1,15 @@
 ---
-title: "Intro"
+title: "Introduction To R using [R Markdown](http://rmarkdown.rstudio.com/) and [bookdown](https://bookdown.org/yihui/bookdown/)"
+name: Bri Bentley
+date: Feburary 6, 2018
 output: html_document
 ---
+
 ```{r, label = "SETUP", echo = FALSE, results= 'hide', message = FALSE, warning = FALSE}
 knitr::opts_chunk$set(comment = NA, fig.align = 'center', fig.height = 5, fig.width = 5, prompt = TRUE, highlight = TRUE, tidy = FALSE, warning = FALSE, message = FALSE)
 ```
 
-## 1 Lab
+# 1 Lab
 
 ## 1.1 Basic Commands
 
@@ -384,9 +387,9 @@ hist(Auto2$mpg, col = "red", xlab = "MPG", main = "Your Title Here")
 hist(Auto2$mpg, col = "red", xlab = "MPG", main = "Your Title Here", breaks = 15)
 ```
 
-##2 Creating boxplots and histograms with `**ggplot2**`
+##2 Creating boxplots and histograms with `ggplot2`
 
-See the `geom_boxplot` documentation and the `geom_freqpoly` documentation for more details.
+See the `geom_boxplot` [documentation](http://ggplot2.tidyverse.org/reference/geom_boxplot.html) and the `geom_freqpoly` [documentation](http://ggplot2.tidyverse.org/reference/geom_histogram.html) for more details.
 
 ```{r}
 library(ggplot2)
@@ -450,7 +453,7 @@ p + geom_histogram(binwidth = 5, fill = "blue", color = "black") +
 p + geom_histogram(binwidth = 5, fill = "blue", color = "black", aes(y = ..density..)) + theme_bw()
 ```
 
-##2.1 Creating boxplots and histograms with `**ggvis**`
+##2.1 Creating boxplots and histograms with `ggvis`
 
 ```{r}
 library(ggvis)
@@ -472,7 +475,7 @@ Auto2 %>%
   add_axis("x", title = "Miles Per Gallon")
 ```
 
-##2.2 Using `**ploty**`
+##2.2 Using `ploty`
 
 ```{r}
 library(plotly)
@@ -505,7 +508,7 @@ For qualitative variables such as `name`, `R` will list the number of observatio
 summary(Auto2$mpg)
 ```
 
-##3 Aggregating with `**dplyr**`
+##3 Aggregating with `dplyr`
 
 Consider producing summary statistics for the variable `mpg` when it is grouped by `cylinders`.
 
@@ -515,3 +518,47 @@ Auto2 %>%
   group_by(cylinders) %>%
   summarize(median(mpg), IQR(mpg), n())
 ```
+
+##4 Automatic Generation of 'R' Package References
+
+Suppose the following `R` packages are used for a project: `DT`, `ggplot2`, `ISLR`,  `knitr`, `plotly`, `dplyr`, `rmarkdown`, and `bookdown`.
+
+1. Create an object named `PackagesUsed`.
+2. Write the packages used to a `*.bib` file.
+3. Load the packages with `lapply()`.3
+4. Add a `bibliography` entry to the YAML.
+5. Cite the package using `@R-packagename` (look at the `*.bib` file for the exact name)
+6. Add a `References` section header (`## References`) at the very end of the document. The references will appear (provided they are cited) after the header.
+
+```{r}
+PackagesUsed <- c("DT", "ggplot2", "ISLR", "knitr", "plotly", "dplyr", "rmarkdown", "bookdown")
+# Write bib information
+knitr::write_bib(PackagesUsed, file = "./PackagesUsed.bib")
+# Load packages
+lapply(PackagesUsed, library, character.only = TRUE)
+```
+
+Example YAML:
+
+```{r}
+title: "Introduction To R using [R Markdown](http://rmarkdown.rstudio.com/) and [bookdown](https://bookdown.org/yihui/bookdown/)"
+author: "Your Name"
+date: '`r format(Sys.time(), "%b %d, %Y")`'
+bibliography: PackagesUsed.bib
+output: 
+  bookdown::html_document2: 
+    highlight: textmate
+    theme: yeti
+```
+
+This document uses `DT` by Xie (2016), ggplot2 by Wickham and Chang (2016),  `ISLR` by James et al. (2017), `plotly` by Sievert et al. (2017), `rmarkdown` by Allaire et al. (2017), `dplyr` by Wickham et al. (2017), `knitr` by Xie (2017b), and `bookdown` by Xie (2017a).4
+
+The previous line with citations was created using:
+```{r}
+This document uses `DT` by @R-DT, `ggplot2` by @R-ggplot2, `ISLR` by @R-ISLR, `plotly` by @R-plotly, `rmarkdown` by @R-rmarkdown, `dplyr` by @R-dplyr, `knitr` by @R-knitr, and `bookdown` by @R-bookdown. 
+```
+
+```{r}
+sessionInfo()
+```
+
