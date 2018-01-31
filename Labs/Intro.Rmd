@@ -5,6 +5,8 @@ date: Feburary 6, 2018
 output: html_document
 ---
 
+**Directions:** Create a directory inside your team repository named `labs`. Recreate this document. Name your `*.Rmd` file  `Intro.Rmd` and store the file inside the `labs` directory. See Section 4 for how to set up your YAML. Make sure to commit and push both your `Intro.Rmd` and resulting `Intro.html` files to GitHub. For more information on `knitr` (Xie 2017b) code chunk options, see [https://yihui.name/knitr/options/](https://yihui.name/knitr/options/). Refer to [https://bookdown.org/yihui/bookdown/](https://bookdown.org/yihui/bookdown/) for information on labeling and referencing footnotes, sections, tables, equations, and figures. Use the following global options for your document:
+
 ```{r, label = "SETUP", echo = FALSE, results= 'hide', message = FALSE, warning = FALSE}
 knitr::opts_chunk$set(comment = NA, fig.align = 'center', fig.height = 5, fig.width = 5, prompt = TRUE, highlight = TRUE, tidy = FALSE, warning = FALSE, message = FALSE)
 ```
@@ -540,7 +542,8 @@ lapply(PackagesUsed, library, character.only = TRUE)
 
 Example YAML:
 
-```{r}
+```
+---
 title: "Introduction To R using [R Markdown](http://rmarkdown.rstudio.com/) and [bookdown](https://bookdown.org/yihui/bookdown/)"
 author: "Your Name"
 date: '`r format(Sys.time(), "%b %d, %Y")`'
@@ -549,12 +552,13 @@ output:
   bookdown::html_document2: 
     highlight: textmate
     theme: yeti
+---    
 ```
 
 This document uses `DT` by Xie (2016), ggplot2 by Wickham and Chang (2016),  `ISLR` by James et al. (2017), `plotly` by Sievert et al. (2017), `rmarkdown` by Allaire et al. (2017), `dplyr` by Wickham et al. (2017), `knitr` by Xie (2017b), and `bookdown` by Xie (2017a).4
 
 The previous line with citations was created using:
-```{r}
+```
 This document uses `DT` by @R-DT, `ggplot2` by @R-ggplot2, `ISLR` by @R-ISLR, `plotly` by @R-plotly, `rmarkdown` by @R-rmarkdown, `dplyr` by @R-dplyr, `knitr` by @R-knitr, and `bookdown` by @R-bookdown. 
 ```
 
@@ -562,3 +566,30 @@ This document uses `DT` by @R-DT, `ggplot2` by @R-ggplot2, `ISLR` by @R-ISLR, `p
 sessionInfo()
 ```
 
+## References
+
+Allaire, JJ, Yihui Xie, Jonathan McPherson, Javier Luraschi, Kevin Ushey, Aron Atkins, Hadley Wickham, Joe Cheng, and Winston Chang. 2017. Rmarkdown: Dynamic Documents for R. [https://CRAN.R-project.org/package=rmarkdown](https://CRAN.R-project.org/package=rmarkdown).
+
+James, Gareth, Daniela Witten, Trevor Hastie, and Rob Tibshirani. 2017. ISLR: Data for an Introduction to Statistical Learning with Applications in R. [https://CRAN.R-project.org/package=ISLR](https://CRAN.R-project.org/package=ISLR).
+
+Sievert, Carson, Chris Parmer, Toby Hocking, Scott Chamberlain, Karthik Ram, Marianne Corvellec, and Pedro Despouy. 2017. Plotly: Create Interactive Web Graphics via ’Plotly.js’. [https://CRAN.R-project.org/package=plotly](https://CRAN.R-project.org/package=plotly).
+
+Wickham, Hadley, and Winston Chang. 2016. Ggplot2: Create Elegant Data Visualisations Using the Grammar of Graphics. [https://CRAN.R-project.org/package=ggplot2](https://CRAN.R-project.org/package=ggplot2).
+
+Wickham, Hadley, Romain Francois, Lionel Henry, and Kirill Müller. 2017. Dplyr: A Grammar of Data Manipulation. [https://CRAN.R-project.org/package=dplyr](https://CRAN.R-project.org/package=dplyr).
+
+Xie, Yihui. 2016. DT: A Wrapper of the Javascript Library ’Datatables’. [https://CRAN.R-project.org/package=DT](https://CRAN.R-project.org/package=DT).
+
+———. 2017a. Bookdown: Authoring Books and Technical Documents with R Markdown. [https://CRAN.R-project.org/package=bookdown](https://CRAN.R-project.org/package=bookdown).
+
+———. 2017b. Knitr: A General-Purpose Package for Dynamic Report Generation in R. [https://CRAN.R-project.org/package=knitr](https://CRAN.R-project.org/package=knitr).
+
+------
+
+1. The material is Section 1 is modified from the Chapter 2 lab of [An introduction to Statistical Learning](http://www-bcf.usc.edu/~gareth/ISL/ISLR%20Seventh%20Printing.pdf).↩
+
+2. Use the argument `dpi = 96` inside `include_graphics()`.↩
+
+3. Use `results = "hide"` in your code chunk to hide the results of `lapply()`.↩
+
+4. Use the appropriate syntax to cite your references. Otherwise, your **References** will not be generated automatically.↩

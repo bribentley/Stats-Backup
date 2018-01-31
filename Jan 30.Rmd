@@ -1,0 +1,29 @@
+---
+title: "Untitled"
+output: html_document
+---
+
+```{r}
+library(ggplot2)
+
+set.seed(10)
+nx <- 65
+lambdax <- 1/10
+sigmax <- 10
+ny <- 90
+lambday <- 1
+sigmay <- 1
+samples <- 10000
+RV <- numeric(samples)
+for(i in 1:samples){
+xs <- rexp(nx, lambdax)
+ys <- rexp(ny, lambday)
+RV[i] <- (var(xs)/sigmax^2) / (var(ys)/sigmay^2)
+}
+ggplot(data = data.frame(x = RV), aes(x = x)) +
+  geom_histogram(aes(x = x, y = ..density..),
+                binwidth = 0.03, fill = "blue", alpha = 0.5) +
+  stat_function(fun = df, args = list(nx- 1, ny - 1), color = "blue", n = 500, size = 1) +
+theme_bw() +
+labs(x = "", y = "")
+```
