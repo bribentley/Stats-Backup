@@ -1,0 +1,132 @@
+---
+title: 'Quiz #2 - Partial Solution'
+author: "Your Name"
+date: 'Last knit on `r format(Sys.time(), "%B %d, %Y at %X")`'
+output: 
+  bookdown::html_document2
+---
+
+```{r label = "setup", include=FALSE}
+library(tidyverse)
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE, fig.align = "center", comment = NA, fig.height = 3.5)
+```
+
+**Directions: Change the author field in the `YAML` from "Your Name" to your name using the convention of FirstName LastName. For example, my entry would be `author: "Alan Arnholt"`.  The data frame `ncbirths` contains the variables `fage`, `mage`, `mature`, `weeks`, `premie`, `visits`, `marital`, `gained`, `weight`, `lowbirthweight`, `gender`, `habit`, and `whitemom`.  Store this file as `Quiz02.Rmd` inside your `Quizzes` directory.  When you finish, commit your changes and push your work to GitHub.  Use the commit message `Finished Quiz 02!`.  Verify you can see your files at `https://github.com/STAT-ATA-ASU/YourLast-YourFirst-STT5812-SP18/tree/master/Quizzes`.**
+
+```{r}
+library(openintro)
+names(ncbirths)
+# Type ?ncbirths 
+# in the console to open the help file
+# I like to use summary() and str() on all new data sets
+summary(ncbirths)
+str(ncbirths)
+```
+
+1. Compute mean, standard deviation, and number of non-missing observations for the weight gained during pregnancy (`gained`) by mothers according to their level of `mature` (`mature mom` or `younger mom`).
+
+```{r}
+library(dplyr)
+SI <- ncbirths %>% 
+  group_by(mature) %>% 
+  summarize(Mean = mean(gained, na.rm = TRUE), SD = sd(gained, na.rm = TRUE), n = sum(!is.na(gained)))
+SI
+## Using tapply - will have to use an annonymous function
+tapply(ncbirths$gained, ncbirths$mature, mean, na.rm = TRUE)
+with(ncbirths, tapply(gained, mature, sd, na.rm = TRUE))
+tapply(ncbirths$gained, ncbirths$mature, function(x) {length(x[!is.na(x)])})
+tapply(ncbirths$gained, ncbirths$mature, function(x) {sum(!is.na(x))})
+## Using subset---could use drop = TRUE to make vector
+MM <- subset(ncbirths, subset = mature == "mature mom", select = gained)
+YM <- subset(ncbirths, subset = mature == "younger mom", select = gained)
+MX <- mean(MM$gained, na.rm = TRUE)
+SX <- sd(MM$gained, na.rm = TRUE)
+nx <- sum(!is.na(MM$gained))
+MY <- mean(YM$gained, na.rm = TRUE)
+SY <- sd(YM$gained, na.rm = TRUE)
+ny <- sum(!is.na(YM$gained))
+c(MX, SX, nx, MY, SY, ny)
+## Using pure R
+MMg <- ncbirths$gained[ncbirths$mature == "mature mom"]
+YMg <- ncbirths$gained[ncbirths$mature == "younger mom"]
+mean(MMg, na.rm = TRUE)
+sd(MMg, na.rm = TRUE)
+sum(!is.na(MMg))
+mean(YMg, na.rm = TRUE)
+sd(YMg, na.rm = TRUE)
+sum(!is.na(YMg))
+```
+
+The mean, standard deviation, and number of non-missing observations for mature mothers and younger mothers are: $`r SI[1,2]`, `r SI[1,3]`, `r SI[1,4]`, `r SI[2,2]`, `r SI[2,3]`, `r SI[2,4]`$, respectively.
+
+2. Based on your answers to question 1, the density plots shown in Figure \@ref(fig:dens), and the Q-Q plots shown in Figure \@ref(fig:qqp) 
+    + Should you pool or not pool the variances to compute a confidence interval for the mean weight gained during pregnancy for mature moms minus the mean weight gained during pregnancy for younger mothers  $\left( \mu_{\text{mature mom}} - \mu_{\text{younger mom}} \right)$?  
+    + Construct a 90% confidence interval for the mean weight gained during pregnancy for mature moms minus the mean weight gained during pregnancy for younger mothers  $\left( \mu_{\text{mature mom}} - \mu_{\text{younger mom}} \right)$.  
+    + Does your confidence interval contain zero?  If so, what does this mean? 
+
+
+```{r, label = "dens", fig.cap = "Density plots of weight gained (lbs.)", echo = FALSE}
+library(ggplot2)
+ggplot(data = ncbirths, aes(x = gained, fill = mature)) +
+  geom_density() + 
+  theme_bw() + 
+  facet_grid(.~mature) + 
+  guides(fill = FALSE)
+```
+
+```{r, label = "qqp", fig.cap = "Q-Q plot of weight gained by `mature`", echo = FALSE}
+ggplot(data = ncbirths, aes(sample = gained, color = mature)) +
+  geom_qq(size = 1, alpha = 0.2) + 
+  facet_grid(.~mature) + 
+  theme_bw() + 
+  guides(color = FALSE)
+```
+
+```{r}
+# Your answer here
+CI <- t.test(gained ~ mature, data = ncbirths, conf.level = 0.9)$conf
+CI
+# Could also pass two separate vectors
+t.test(MMg, YMg, conf.level = 0.9)$conf
+# Not recommended but since you have all the information
+# one could use tsum.test
+PASWR2::tsum.test(mean.x = MX, mean.y = MY, s.x = SX, s.y = SY, n.x = nx, n.y = ny, conf.level = 0.9)$conf
+```
+
+* Your Answers:
+    + **Do not** pool the variances since the larger standard deviation is associated with the larger sample size and the sample sizes are different.  One might argue to pool the variances since a confidence interval for the ratio of variances contains 1; however, this will produce more errors than not pooling.
+    + A 90% confidence interval for the mean weight gained during pregnancy for mature moms minus the mean weight during preganancy gained for younger mothers  $\left( \mu_{\text{mature mom}} - \mu_{\text{younger mom}} \right)$ is $CI_{0.90}\left( \mu_{\text{mature mom}} - \mu_{\text{younger mom}} \right) = [`r CI[1]`\text{ pounds}, `r CI[2]`\text{ pounds}]$.
+    + Since the confidence interval **contains** zero, this suggests that there is **no significant** difference between the mean weight gained during pregnancy for mature mothers and the mean weight gained during pregnancy for younger mothers.
+
+3. Construct a 95% Wilson confidence interval for the proportion of mature mothers in North Carolina.
+
+```{r}
+xtabs(~mature, data = ncbirths)
+# Your code here
+library(binom)
+CI <- binom.confint(x = 133, n = 133 + 867, conf.level = 0.95, methods = "wilson")
+CI
+# Or
+prop.test(x = 133, n = 133 + 867, correct = FALSE)
+```
+
+The 95% Wilson confidence interval for the proportion of mature mothers in North Carolina is $CI_{0.95}(\pi) = [`r CI[5]`, `r CI[6]`]$.
+
+
+4.  Compute a 90% confidence interval for the variance in weight gained during pregnancy by North Carolina mature mothers.
+
+
+```{r}
+# Your code here
+# 90% CI for sigma^2
+CI <- ncbirths %>% 
+  filter(mature == "mature mom") %>% 
+  summarize(Mean = mean(gained, na.rm = TRUE), SD = sd(gained, na.rm = TRUE), n = sum(!is.na(gained))) %>% 
+  mutate(lcl = (n - 1)*SD^2/qchisq(0.95, n - 1), ucl = (n - 1)*SD^2/qchisq(0.05, n - 1))
+CI
+# Or
+ACI <- c((nx - 1)*SX^2/qchisq(0.95, nx - 1), (nx -1)*SX^2/qchisq(0.05, nx - 1))
+ACI
+```
+
+The 90% confidence interval for the variance in weight gained during pregnancy by North Carolina mature mothers is $CI_{0.90}(\sigma^2) = [`r CI[4]` \text{ pounds}^2, `r CI[5]` \text{ pounds}^2]$.
