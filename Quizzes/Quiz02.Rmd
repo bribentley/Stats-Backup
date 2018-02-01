@@ -20,16 +20,20 @@ names(ncbirths)
 # in the console to open the help file
 ```
 
+```{r}
+summary(ncbirths)
+```
+
 1. Compute mean, standard deviation, and number of non-missing observations for the weight gained during pregnancy (`gained`) by mothers according to their level of `mature` (`mature mom` or `younger mom`).
 
 ```{r}
 library(dplyr)
 ncbirths %>%
-  group_by(mature)%>%
-  summarize(Means = mean(gained, na.rm = TRUE), SD = sd(gained, na.rm = TRUE), n = n())
+  group_by(mature) %>%
+  summarize(Means = mean(gained, na.rm = TRUE), SD = sd(gained, na.rm = TRUE), n = sum(!is.na(gained)))
 ```
 
-The mean, standard deviation, and number of non-missing observations for mature mothers and younger mothers are: **28.79, 13.48, 133, 30.56, 14.35, 867**, respectively.
+The mean, standard deviation, and number of non-missing observations for mature mothers and younger mothers are: **28.79, 13.48, 129, 30.56, 14.35, 844**, respectively.
 
 2. Based on your answers to question 1, the density plots shown in Figure \@ref(fig:dens), and the Q-Q plots shown in Figure \@ref(fig:qqp) 
     + Should you pool or not pool the variances to compute a confidence interval for the mean weight gained during pregnancy for mature moms minus the mean weight gained during pregnancy for younger mothers  $\left( \mu_{\text{mature mom}} - \mu_{\text{younger mom}} \right)$?  
@@ -46,6 +50,7 @@ ggplot(data = ncbirths, aes(x = gained, fill = mature)) +
   guides(fill = FALSE)
 ```
 
+
 ```{r, label = "qqp", fig.cap = "Q-Q plot of weight gained by `mature`", echo = FALSE}
 ggplot(data = ncbirths, aes(sample = gained, color = mature)) +
   geom_qq(size = 1, alpha = 0.2) + 
@@ -54,15 +59,16 @@ ggplot(data = ncbirths, aes(sample = gained, color = mature)) +
   guides(color = FALSE)
 ```
 
+
 ```{r}
 CI <- t.test(gained ~ mature, data = ncbirths, conf.level = 0.90)$conf
 CI
 ```
 
 * Your Answers:
-    + **Yes** pool the variances.
+    + **Do not** pool the variances.
     + A 90% confidence interval for the mean weight gained during pregnancy for mature moms minus the mean weight during preganancy gained for younger mothers  $\left( \mu_{\text{mature mom}} - \mu_{\text{younger mom}} \right)$ is $CI_{0.90}\left( \mu_{\text{mature mom}} - \mu_{\text{younger mom}} \right) = [`r CI[1]`,`r CI[2]`]$.
-    + Since the confidence interval **contains** zero, this suggests that there **is no** difference between the mean weight gained during pregnancy for mature mothers and the mean weight gained during pregnancy for younger mothers.
+    + Since the confidence interval **contains** zero, this suggests that there **is no significant** difference between the mean weight gained during pregnancy for mature mothers and the mean weight gained during pregnancy for younger mothers.
 
 3. Construct a 95% Wilson confidence interval for the proportion of mature mothers in North Carolina.
 
@@ -81,13 +87,24 @@ The 95% Wilson confidence interval for the proportion of mature mothers in North
 ```{r}
 # Your code here
 # 90% CI for sigma^2
+#Incorrect Code
+#LCL <- ((133+867-1)*(13.48244)^2)/(qchisq(.05,133+867-1))
+#UCL <- ((133+867-1)*(13.48244)^2)/(qchisq(.95,133+867-1))
+#LCL
+#UCL
 
-LCL <- ((133+867-1)*(13.48244)^2)/(qchisq(.05,133+867-1))
-
-UCL <- ((133+867-1)*(13.48244)^2)/(qchisq(.95,133+867-1))
-
-LCL
-UCL
+#Corrected Code
+C.I. <- ncbirths %>%
+  filter(mature == "mature mom") %>%
+  summarize(Mean = mean(gained, na.rm = TRUE), SD = sd(gained, na.rm = TRUE), n=sum(!is.na(gained))) %>%
+  mutate(lcl = (n-1)*SD^2/qchisq(0.95, n-1), ucl = (n-1)*SD^2/qchisq(0.05, n-1))
+C.I.
 ```
 
-The 90% confidence interval for the variance in weight gained during pregnancy by North Carolina mature mothers is $CI_{0.90}(\sigma^2) = [`r LCL`,`r UCL`]$.
+The 90% confidence interval for the variance in weight gained during pregnancy by North Carolina mature mothers is $CI_{0.90}(\sigma^2) = [149.721, 226.1878]$.
+
+-------
+
+In the first question I was not sure what to add to the n part of the code in order for it to discard the NA values in the total counts. I added that argument into my code in my revised version of the quiz. I also thought that since the graphs of the mature moms versus younger moms were so similar then it was appropriate to pool the variances, I was mistaken. The explanation you provided makes a lot of sense in terms of why my thinking on that problem was incorrect.
+
+For the last problem, I made several errors. I forgot that the problem was specifically for mature moms, so when I found n I was basing it off of the entire population including the NA entries, and not specifically the mature mom population without the NA entries. I also used 0.05 for the lower confidence level and 0.95 for the upper confidence level when I should have switched those.
