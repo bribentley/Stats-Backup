@@ -11,7 +11,7 @@ output: html_document
 knitr::opts_chunk$set(comment = NA, fig.align = 'center', fig.height = 5, fig.width = 5, prompt = TRUE, highlight = TRUE, tidy = FALSE, warning = FALSE, message = FALSE)
 ```
 
-# 1 Lab
+# 1(#header) Lab [^1]
 
 ## 1.1 Basic Commands
 
@@ -161,7 +161,13 @@ plot(x, y, col = "green")
 dev.off()
 ```
 
-To display the saved file as shown in Figure 1.1, use the `include_graphics()` function from `knitr`.
+To display the saved file as shown in Figure 1.1, use the `include_graphics()` function from `knitr`. [^2]
+
+<center>
+
+ ![Figure 1.1: Using `knitr::include_graphics()`](JPG/YourFileName.jpeg)
+
+</center>
 
 The function `dev.off()` indicates to `R` that we are done creating the plot. Alternatively, we can simply copy the plot window and paste it into an appropriate file type, such as a Word document.
 
@@ -521,18 +527,18 @@ Auto2 %>%
   summarize(median(mpg), IQR(mpg), n())
 ```
 
-##4 Automatic Generation of 'R' Package References
+##4 Automatic Generation of `R` Package References
 
 Suppose the following `R` packages are used for a project: `DT`, `ggplot2`, `ISLR`,  `knitr`, `plotly`, `dplyr`, `rmarkdown`, and `bookdown`.
 
 1. Create an object named `PackagesUsed`.
 2. Write the packages used to a `*.bib` file.
-3. Load the packages with `lapply()`.3
+3. Load the packages with `lapply()`.[^3]
 4. Add a `bibliography` entry to the YAML.
 5. Cite the package using `@R-packagename` (look at the `*.bib` file for the exact name)
 6. Add a `References` section header (`## References`) at the very end of the document. The references will appear (provided they are cited) after the header.
 
-```{r}
+```
 PackagesUsed <- c("DT", "ggplot2", "ISLR", "knitr", "plotly", "dplyr", "rmarkdown", "bookdown")
 # Write bib information
 knitr::write_bib(PackagesUsed, file = "./PackagesUsed.bib")
@@ -555,7 +561,7 @@ output:
 ---    
 ```
 
-This document uses `DT` by Xie (2016), ggplot2 by Wickham and Chang (2016),  `ISLR` by James et al. (2017), `plotly` by Sievert et al. (2017), `rmarkdown` by Allaire et al. (2017), `dplyr` by Wickham et al. (2017), `knitr` by Xie (2017b), and `bookdown` by Xie (2017a).4
+This document uses `DT` by Xie (2016), ggplot2 by Wickham and Chang (2016),  `ISLR` by James et al. (2017), `plotly` by Sievert et al. (2017), `rmarkdown` by Allaire et al. (2017), `dplyr` by Wickham et al. (2017), `knitr` by Xie (2017b), and `bookdown` by Xie (2017a). [^4]
 
 The previous line with citations was created using:
 ```
@@ -586,10 +592,10 @@ Xie, Yihui. 2016. DT: A Wrapper of the Javascript Library ’Datatables’. [htt
 
 ------
 
-1. The material is Section 1 is modified from the Chapter 2 lab of [An introduction to Statistical Learning](http://www-bcf.usc.edu/~gareth/ISL/ISLR%20Seventh%20Printing.pdf).↩
+[^1]: The material is Section [1](#header) is modified from the Chapter 2 lab of [An introduction to Statistical Learning](http://www-bcf.usc.edu/~gareth/ISL/ISLR%20Seventh%20Printing.pdf).
 
-2. Use the argument `dpi = 96` inside `include_graphics()`.↩
+[^2]: Use the argument `dpi = 96` inside `include_graphics()`.
 
-3. Use `results = "hide"` in your code chunk to hide the results of `lapply()`.↩
+[^3]: Use `results = "hide"` in your code chunk to hide the results of `lapply()`.
 
-4. Use the appropriate syntax to cite your references. Otherwise, your **References** will not be generated automatically.↩
+[^4]: Use the appropriate syntax to cite your references. Otherwise, your **References** will not be generated automatically.
