@@ -10,7 +10,7 @@ output:
 ---
 
 ```{r, label = "SETUP", echo = FALSE, results= 'hide', message = FALSE, warning = FALSE}
-knitr::opts_chunk$set(comment = NA, fig.align = 'center', fig.height = 5, fig.width = 5, prompt = TRUE, highlight = TRUE, tidy = FALSE, warning = FALSE, message = FALSE)
+knitr::opts_chunk$set(comment = NA, fig.align = 'center', fig.height = 5, fig.width = 5, prompt = FALSE, highlight = TRUE, tidy = FALSE, warning = FALSE, message = FALSE)
 ```
 
 **Directions:** Create a directory inside your team repository named `labs`. Recreate this document. Name your `*.Rmd` file  `Intro.Rmd` and store the file inside the `labs` directory. See Section [4](#sec4) for how to set up your YAML. Make sure to commit and push both your `Intro.Rmd` and resulting `Intro.html` files to GitHub. For more information on `knitr` (Xie 2017b) code chunk options, see [https://yihui.name/knitr/options/](https://yihui.name/knitr/options/). Refer to [https://bookdown.org/yihui/bookdown/](https://bookdown.org/yihui/bookdown/) for information on labeling and referencing footnotes, sections, tables, equations, and figures. Use the following global options for your document:
