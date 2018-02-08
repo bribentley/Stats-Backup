@@ -1,0 +1,42 @@
+---
+title: "Intro Comments"
+author: "Alan T. Arnholt"
+date: "2/8/2018"
+output: 
+  bookdown::html_document2: 
+    highlight: textmate
+    theme: yeti
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+* Use the information in the **Example YAML** to get your fonts to match the online document.  You have manually inserted numbers and citations (too much work).  Please see the bookdown documentation or the example online for how to do this so your document converts properly.  Specifically, your output should be `bookdown::html_document2`. Figure 1.1 was not created with `include_graphics()`.
+To get the gray background versus the white see the code in this document for the next two code chunks.
+
+```
+---
+title: "Introduction To R using [R Markdown](http://rmarkdown.rstudio.com/) and [bookdown](https://bookdown.org/yihui/bookdown/)"
+author: "Your Name"
+date: '`r format(Sys.time(), "%b %d, %Y")`'
+bibliography: PackagesUsed.bib
+output: 
+  bookdown::html_document2: 
+    highlight: textmate
+    theme: yeti
+---    
+```
+
+```{r, eval = FALSE}
+---
+title: "Introduction To R using [R Markdown](http://rmarkdown.rstudio.com/) and [bookdown](https://bookdown.org/yihui/bookdown/)"
+author: "Your Name"
+date: '`r format(Sys.time(), "%b %d, %Y")`'
+bibliography: PackagesUsed.bib
+output: 
+  bookdown::html_document2: 
+    highlight: textmate
+    theme: yeti
+---    
+```
