@@ -1,0 +1,116 @@
+---
+title: "Chapter 9 Outline"
+author: "Alan T. Arnholt"
+date: "2/13/2018"
+output: bookdown::html_document2
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, comment = NA, fig.align = "center", message = FALSE, warning = FALSE)
+```
+
+# Introduction
+
+## Concepts
+
+* Null hypothesis: Accepted as true, assuming a normal distribution from that data
+* Alternative hypothesis
+     + lower one-sided
+     + upper one-sided
+     + two-sided
+
+When a hypothesis uniquely specifies the distribution for the population from which the sample is taken, the hypothesis is said to be **simple**.  Any hypothesis that is not a simple hypothesis is called a **composite hypothesis**.
+
+## Type I and Type II Errors
+
+* $\alpha = P(\text{type I error}) = P(\text{reject } H_0|H_0 \text{ is true})$ "Significance Level"
+* $\beta = P(\text{type II error}) = P(\text{fail to reject }H_0|H_0 \text{ is false})$
+* $1 - \beta = \text{Power of the Test}$
+
+Power: probability you reject the null hypothesis when it's false.
+
+Fail to reject the null the only mistake you can make is type 2, if reject the null the only type of mistake you can make is type 1 (null hypothesis is true but reject "innocent yet claim guilty").
+
+### Exercise
+
+Given a **normal distribution** (need to know this) with unknown mean $\mu$ and know standard deviation $\sigma = 1$, one wishes to test the null hypothesis $H_0: \mu = 10$ versus the alternative hypothesis $H_1: \mu = 13$.  A sample of size one is taken where the rejection region is considered to be the interval $(11.64485, \infty)$.  Determine $\alpha$ and $\beta$ for this experiment.  Graph $\alpha$ and $\beta$ by hand and with `R`.
+
+**Solution**
+
+```{r}
+alpha <-1 - pnorm(11.64485, 10, 1)
+## or pnorm(11.64485, 10, 1, lower.tail = FALSE)
+beta <- pnorm(11.64485, 13, 1)
+c(alpha, beta)
+```
+
+* Graph 
+
+```{r}
+library(ggplot2)
+p <- ggplot(data = data.frame(x = c(6.4, 16.6)), aes(x = x))
+## 3.6 standard deviations from each mean on each end for x values
+
+dnorm_func <- function(x){
+  y <- dnorm(x, 13, 1)
+  y[x <= qnorm(0.95, 10, 1)] <- NA
+  return(y)
+}
+
+dnorm_func1 <- function(x){
+   y <- dnorm(x, 13, 1)
+  y[x >= qnorm(0.95, 10, 1)] <- NA
+  return(y)
+}
+
+dnorm_func2 <- function(x){
+    y <- dnorm(x, 10, 1)
+  y[x < qnorm(0.95, 10, 1)] <- NA
+  return(y)
+}
+
+p + stat_function(fun = dnorm_func, geom = "area", fill = "blue", alpha = 0.2, n = 500) +
+  stat_function(fun = dnorm_func1, geom = "area", fill = "blue", n = 500) +
+  geom_hline(yintercept = 0)+
+  stat_function(fun = dnorm, args = list(10, 1), n = 500)+
+  stat_function(fun = dnorm, args = list(13, 1), n = 500)+
+  theme_bw()+
+  labs(x = "", y = "")
+```
+
+
+### Exercise
+
+Using a 10% significance level, what is the power of the test $H_0: \mu = 100$ versus $H_1: \mu > 100$ if a sample of size 25 is taken from a $N(105, 10)$?
+
+```{r}
+z <- qnorm(.1, 100, 10/sqrt(25), lower.tail = FALSE)
+## or qnorm(.9, 100, 10/sqrt(25))
+beta <- pnorm(z, 105, 10/sqrt(25))
+POWER <- 1 - beta
+POWER
+```
+
+* Write a function (one per group--Creating functions is discussed on page 74) that shades Type II error as well as the Power for a particular simple alternative hypothesis.  This function will be used in your shiny app next week.
+
+* * *
+
+Quiz
+
+* * *
+
+## Plotting Coverage Probability
+
+```{r}
+library(binom)
+binom.plot(n = 20, method = binom.asymp, np = 2000, conf.level = 0.90)
+```
+
+* What would you want the UI to look like for a coverage probability shiny app?
+
+* Group assignment (develop a coverage probability shiny app).
+
+* Upload the two directories (`BuildingWebappsWithShiny`, `CaseStudies`) in asulearn to your team/private repository. 
+
+
+
