@@ -1,6 +1,6 @@
 ---
 title: 'Quiz #3'
-author: "Your Name"
+author: "Bri Bentley"
 date: 'Last knit on `r format(Sys.time(), "%B %d, %Y at %X")`'
 output: 
   bookdown::html_document2
