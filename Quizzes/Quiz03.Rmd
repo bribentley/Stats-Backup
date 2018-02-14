@@ -1,0 +1,23 @@
+---
+title: 'Quiz #3'
+author: "Your Name"
+date: 'Last knit on `r format(Sys.time(), "%B %d, %Y at %X")`'
+output: 
+  bookdown::html_document2
+---
+
+```{r label = "setup", include=FALSE}
+library(tidyverse)
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE, fig.align = "center", comment = NA, fig.height = 3.5)
+```
+
+**Directions: Change the author field in the `YAML` from "Your Name" to your name using the convention of FirstName LastName. For example, my entry would be `author: "Alan Arnholt"`.   Store this file as `Quiz03.Rmd` inside your `Quizzes` directory.  When you finish, commit your changes and push your work to GitHub.  Use the commit message `Finished Quiz 03!`.  Verify you can see your files at `https://github.com/STAT-ATA-ASU/YourLast-YourFirst-STT5812-SP18/tree/master/Quizzes`.**
+
+* Using a 5% significance level, what is the power of the test $H_0: \mu = 100$ versus $H_1: \mu > 100$ if a sample of size 36 is taken from a $N(105, 12)$?  
+
+```{r}
+z <- qnorm(.05, 100, 12/sqrt(36), lower.tail = FALSE)
+beta <- pnorm(z, 105, 12/sqrt(36))
+POWER <- 1 - beta
+POWER
+```
