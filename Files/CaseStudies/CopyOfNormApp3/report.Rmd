@@ -1,0 +1,29 @@
+---
+title: "Dynamic report"
+output: pdf_document
+params:
+  mu: NA
+  sigma: NA
+  min: NA
+  max: NA
+  alpha: NA
+  color: NA
+---
+
+
+
+The area between $`r params$min`$ and $`r params$max`$ in a $N(`r params$mu`, `r params$sigma`)$ distribution is written as $P(`r params$min` \leq X \leq `r params$max`)= `r round(pnorm(params$max, params$mu, params$sigma) - pnorm(params$min, params$mu, params$sigma), 4)`$.
+
+
+## Simulation
+
+```{r, echo = FALSE, fig.align = "center"}
+junk <- rnorm(10000, params$mu, params$sigma)
+pb <- sum(junk >= params$min & junk <= params$max)/10000 * 100
+hist(junk, col = "purple", breaks = "Scott", main = "Simulation")
+```
+
+In a simulation of $10,000$ values from a $N(`r params$mu`, `r params$sigma`)$ distribution, `r pb`% fell between $`r params$max`$ and $`r params$min`$. 
+
+
+

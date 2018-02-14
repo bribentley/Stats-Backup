@@ -1,0 +1,1144 @@
+---
+title: 'Modeling HW #3'
+name: 'Bri and Charlotte'
+output: html_document
+---
+#exponential Model
+
+### 1
+After running the code several times, we noticed the correlation coefficient was always between 0.95 and 0.98. Twice we had essentially the same correlation coefficient, but the graphs were very different.
+
+### 2
+```{r}
+## SYMMETRIC FOR PROBLEM 2
+## N: number of time steps
+  N <- c(20)     
+
+## M: number of simulation runs
+  M <- c(100)     
+  
+## x: initial value
+  x <- 1000    
+  
+## z: Data array  
+  z <- array(1:N*M, dim=c(N,M))    
+  
+## r values (Bad, Eh, Good) 
+  r_bad <- -0.5
+  r_eh <- 0.1
+  r_good <- 0.5
+  
+## r distribution frequencies (Prob. of Bad, Eh, and Good years). 
+  bad <- 0.3
+  eh <- 0.4
+  good <- 0.3
+ 
+## Looping thorugh simulation runs 
+  for(iter in c(1:(M))){      
+    
+  ## Setting initial condition 
+    z[1,iter] <- x        
+    
+  ## Looping through time steps
+    for(i in c(1:(N-1))){      
+      
+    ## test: Unifomrly distributed number between 0 and 1  (Our "coin flip") 
+        test <- runif(1, 0, 1)                      
+        if(test < bad ){
+          r <- r_bad
+        } else if(test < (bad + eh)) {
+          r <- r_eh
+        } else
+          r <- r_good
+        
+    ## If you want r to be uniformly distributed between -.5 and 1.5    
+     ## r <- runif(1,-.5, 1.5)           
+        
+    ## Exponential Growth model equation    
+      z[i+1,iter] <- z[i,iter] + r *z[i,iter]     
+    }
+  }
+
+
+  
+  ## Calculating Mean growth rate:  
+  r_mean <- bad*r_bad + eh*r_eh + good*r_good
+
+  ## Deterministic Exponential Model
+  z_det <- c(20)
+  z_det[1] = x
+  for(t in c(1:(N-1))){
+    z_det[t+1] <- z_det[t] + r_mean*z_det[t]
+  }
+  
+  
+  ## Plotting Mean values for each time step
+  data_mean <- c(20)
+  for(t in c(1:20)){
+    data_mean[t] <- mean(z[t,])
+  }
+  
+  
+  ## Plotting all of the data
+  
+  par(mfrow=c(1,2))  ## Creats the two plots in onw window
+  
+  matplot(z,type="l")  ## All runs
+
+  plot(data_mean)  ## Means (circles)
+  points(z_det, type="l") ## Deterministic model with r_mean (Line)
+  
+  ## Correlation coefficient between the two types of "average".
+  
+  print(cor(data_mean, z_det))
+```
+
+```{r}
+## SKEWED RIGHT FOR PROBLEM 2
+## N: number of time steps
+  N <- c(20)     
+
+## M: number of simulation runs
+  M <- c(100)     
+  
+## x: initial value
+  x <- 1000    
+  
+## z: Data array  
+  z <- array(1:N*M, dim=c(N,M))    
+  
+## r values (Bad, Eh, Good) 
+  r_bad <- -0.5
+  r_eh <- 0.1
+  r_good <- 0.5
+  
+## r distribution frequencies (Prob. of Bad, Eh, and Good years). 
+  bad <- 0.6
+  eh <- 0.3
+  good <- 0.1
+ 
+## Looping thorugh simulation runs 
+  for(iter in c(1:(M))){      
+    
+  ## Setting initial condition 
+    z[1,iter] <- x        
+    
+  ## Looping through time steps
+    for(i in c(1:(N-1))){      
+      
+    ## test: Unifomrly distributed number between 0 and 1  (Our "coin flip") 
+        test <- runif(1, 0, 1)                      
+        if(test < bad ){
+          r <- r_bad
+        } else if(test < (bad + eh)) {
+          r <- r_eh
+        } else
+          r <- r_good
+        
+    ## If you want r to be uniformly distributed between -.5 and 1.5    
+     ## r <- runif(1,-.5, 1.5)           
+        
+    ## Exponential Growth model equation    
+      z[i+1,iter] <- z[i,iter] + r *z[i,iter]     
+    }
+  }
+
+
+  
+  ## Calculating Mean growth rate:  
+  r_mean <- bad*r_bad + eh*r_eh + good*r_good
+
+  ## Deterministic Exponential Model
+  z_det <- c(20)
+  z_det[1] = x
+  for(t in c(1:(N-1))){
+    z_det[t+1] <- z_det[t] + r_mean*z_det[t]
+  }
+  
+  
+  ## Plotting Mean values for each time step
+  data_mean <- c(20)
+  for(t in c(1:20)){
+    data_mean[t] <- mean(z[t,])
+  }
+  
+  
+  ## Plotting all of the data
+  
+  par(mfrow=c(1,2))  ## Creats the two plots in onw window
+  
+  matplot(z,type="l")  ## All runs
+
+  plot(data_mean)  ## Means (circles)
+  points(z_det, type="l") ## Deterministic model with r_mean (Line)
+  
+  ## Correlation coefficient between the two types of "average".
+  
+  print(cor(data_mean, z_det))
+```
+
+```{r}
+## SKEWED LEFT FOR PROBLEM 2
+## N: number of time steps
+  N <- c(20)     
+
+## M: number of simulation runs
+  M <- c(100)     
+  
+## x: initial value
+  x <- 1000    
+  
+## z: Data array  
+  z <- array(1:N*M, dim=c(N,M))    
+  
+## r values (Bad, Eh, Good) 
+  r_bad <- -0.5
+  r_eh <- 0.1
+  r_good <- 0.5
+  
+## r distribution frequencies (Prob. of Bad, Eh, and Good years). 
+  bad <- 0.1
+  eh <- 0.3
+  good <- 0.6
+ 
+## Looping thorugh simulation runs 
+  for(iter in c(1:(M))){      
+    
+  ## Setting initial condition 
+    z[1,iter] <- x        
+    
+  ## Looping through time steps
+    for(i in c(1:(N-1))){      
+      
+    ## test: Unifomrly distributed number between 0 and 1  (Our "coin flip") 
+        test <- runif(1, 0, 1)                      
+        if(test < bad ){
+          r <- r_bad
+        } else if(test < (bad + eh)) {
+          r <- r_eh
+        } else
+          r <- r_good
+        
+    ## If you want r to be uniformly distributed between -.5 and 1.5    
+     ## r <- runif(1,-.5, 1.5)           
+        
+    ## Exponential Growth model equation    
+      z[i+1,iter] <- z[i,iter] + r *z[i,iter]     
+    }
+  }
+
+
+  
+  ## Calculating Mean growth rate:  
+  r_mean <- bad*r_bad + eh*r_eh + good*r_good
+
+  ## Deterministic Exponential Model
+  z_det <- c(20)
+  z_det[1] = x
+  for(t in c(1:(N-1))){
+    z_det[t+1] <- z_det[t] + r_mean*z_det[t]
+  }
+  
+  
+  ## Plotting Mean values for each time step
+  data_mean <- c(20)
+  for(t in c(1:20)){
+    data_mean[t] <- mean(z[t,])
+  }
+  
+  
+  ## Plotting all of the data
+  
+  par(mfrow=c(1,2))  ## Creats the two plots in onw window
+  
+  matplot(z,type="l")  ## All runs
+
+  plot(data_mean)  ## Means (circles)
+  points(z_det, type="l") ## Deterministic model with r_mean (Line)
+  
+  ## Correlation coefficient between the two types of "average".
+  
+  print(cor(data_mean, z_det))
+```
+
+```{r}
+## BIMODAL FOR PRBLEM 2
+## N: number of time steps
+  N <- c(20)     
+
+## M: number of simulation runs
+  M <- c(100)     
+  
+## x: initial value
+  x <- 1000    
+  
+## z: Data array  
+  z <- array(1:N*M, dim=c(N,M))    
+  
+## r values (Bad, Eh, Good) 
+  r_bad <- -0.5
+  r_eh <- 0.1
+  r_good <- 0.5
+  
+## r distribution frequencies (Prob. of Bad, Eh, and Good years).
+  bad <- 0.4
+  eh <- 0.2
+  good <- 0.4
+ 
+## Looping thorugh simulation runs 
+  for(iter in c(1:(M))){      
+    
+  ## Setting initial condition 
+    z[1,iter] <- x        
+    
+  ## Looping through time steps
+    for(i in c(1:(N-1))){      
+      
+    ## test: Unifomrly distributed number between 0 and 1  (Our "coin flip") 
+        test <- runif(1, 0, 1)                      
+        if(test < bad ){
+          r <- r_bad
+        } else if(test < (bad + eh)) {
+          r <- r_eh
+        } else
+          r <- r_good
+        
+    ## If you want r to be uniformly distributed between -.5 and 1.5    
+     ## r <- runif(1,-.5, 1.5)           
+        
+    ## Exponential Growth model equation    
+      z[i+1,iter] <- z[i,iter] + r *z[i,iter]     
+    }
+  }
+
+
+  
+  ## Calculating Mean growth rate:  
+  r_mean <- bad*r_bad + eh*r_eh + good*r_good
+
+  ## Deterministic Exponential Model
+  z_det <- c(20)
+  z_det[1] = x
+  for(t in c(1:(N-1))){
+    z_det[t+1] <- z_det[t] + r_mean*z_det[t]
+  }
+  
+  
+  ## Plotting Mean values for each time step
+  data_mean <- c(20)
+  for(t in c(1:20)){
+    data_mean[t] <- mean(z[t,])
+  }
+  
+  
+  ## Plotting all of the data
+  
+  par(mfrow=c(1,2))  ## Creats the two plots in onw window
+  
+  matplot(z,type="l")  ## All runs
+
+  plot(data_mean)  ## Means (circles)
+  points(z_det, type="l") ## Deterministic model with r_mean (Line)
+  
+  ## Correlation coefficient between the two types of "average".
+  
+  print(cor(data_mean, z_det))
+```
+
+### 2
+Surprisingly the skewed distributions looked the best.
+
+### 3
+```{r}
+## LOGISTIC GROWTH MODEL
+## N: number of time steps
+  N <- c(20)     
+
+## M: number of simulation runs
+  M <- c(100)     
+  
+## x: initial value
+  x <- 1000    
+  
+## z: Data array  
+  z <- array(1:N*M, dim=c(N,M))
+
+## k: Carrying Capacity
+  k <- 5000
+  
+## r values (Bad, Eh, Good) 
+  r_bad <- -0.5
+  r_eh <- 1
+  r_good <- 1.5
+  
+## r distribution frequencies (Prob. of Bad, Eh, and Good years).
+  bad <- 0.3
+  eh <- 0.3
+  good <- 0.4
+ 
+## Looping thorugh simulation runs 
+  for(iter in c(1:(M))){      
+    
+  ## Setting initial condition 
+    z[1,iter] <- x        
+    
+  ## Looping through time steps
+    for(i in c(1:(N-1))){      
+      
+    ## test: Unifomrly distributed number between 0 and 1  (Our "coin flip") 
+        test <- runif(1, 0, 1)                      
+        if(test < bad ){
+          r <- r_bad
+        } else if(test < (bad + eh)) {
+          r <- r_eh
+        } else
+          r <- r_good
+        
+    ## If you want r to be uniformly distributed between -.5 and 1.5    
+     ## r <- runif(1,-.5, 1.5)           
+        
+    ## Exponential Growth model equation    
+      z[i+1,iter] <- z[i,iter] + r *z[i,iter]*(1-(z[i,iter])/k)   
+    }
+  }
+
+
+  
+  ## Calculating Mean growth rate:  
+  r_mean <- bad*r_bad + eh*r_eh + good*r_good
+
+  ## Deterministic Exponential Model
+  z_det <- c(20)
+  z_det[1] = x
+  for(t in c(1:(N-1))){
+    z_det[t+1] <- z_det[t] + r_mean*z_det[t]*(1-(z_det[t])/k)
+  }
+  
+  
+  ## Plotting Mean values for each time step
+  data_mean <- c(20)
+  for(t in c(1:20)){
+    data_mean[t] <- mean(z[t,])
+  }
+  
+  
+  ## Plotting all of the data
+  
+  par(mfrow=c(1,2))  ## Creats the two plots in onw window
+  
+  matplot(z,type="l")  ## All runs
+
+  plot(data_mean)  ## Means (circles)
+  points(z_det, type="l") ## Deterministic model with r_mean (Line)
+  
+  ## Correlation coefficient between the two types of "average".
+  
+  print(cor(data_mean, z_det))
+```
+
+```{r}
+## LOGISTIC GROWTH MODEL Symmetric
+## N: number of time steps
+  N <- c(20)     
+
+## M: number of simulation runs
+  M <- c(100)     
+  
+## x: initial value
+  x <- 1000    
+  
+## z: Data array  
+  z <- array(1:N*M, dim=c(N,M))
+
+## k: Carrying Capacity
+  k <- 5000
+  
+## r values (Bad, Eh, Good) 
+  r_bad <- -0.5
+  r_eh <- 1
+  r_good <- 1.5
+  
+## r distribution frequencies (Prob. of Bad, Eh, and Good years).
+  bad <- 0.3
+  eh <- 0.4
+  good <- 0.3
+ 
+## Looping thorugh simulation runs 
+  for(iter in c(1:(M))){      
+    
+  ## Setting initial condition 
+    z[1,iter] <- x        
+    
+  ## Looping through time steps
+    for(i in c(1:(N-1))){      
+      
+    ## test: Unifomrly distributed number between 0 and 1  (Our "coin flip") 
+        test <- runif(1, 0, 1)                      
+        if(test < bad ){
+          r <- r_bad
+        } else if(test < (bad + eh)) {
+          r <- r_eh
+        } else
+          r <- r_good
+        
+    ## If you want r to be uniformly distributed between -.5 and 1.5    
+     ## r <- runif(1,-.5, 1.5)           
+        
+    ## Exponential Growth model equation    
+      z[i+1,iter] <- z[i,iter] + r *z[i,iter]*(1-(z[i,iter])/k)   
+    }
+  }
+
+
+  
+  ## Calculating Mean growth rate:  
+  r_mean <- bad*r_bad + eh*r_eh + good*r_good
+
+  ## Deterministic Exponential Model
+  z_det <- c(20)
+  z_det[1] = x
+  for(t in c(1:(N-1))){
+    z_det[t+1] <- z_det[t] + r_mean*z_det[t]*(1-(z_det[t])/k)
+  }
+  
+  
+  ## Plotting Mean values for each time step
+  data_mean <- c(20)
+  for(t in c(1:20)){
+    data_mean[t] <- mean(z[t,])
+  }
+  
+  
+  ## Plotting all of the data
+  
+  par(mfrow=c(1,2))  ## Creats the two plots in onw window
+  
+  matplot(z,type="l")  ## All runs
+
+  plot(data_mean)  ## Means (circles)
+  points(z_det, type="l") ## Deterministic model with r_mean (Line)
+  
+  ## Correlation coefficient between the two types of "average".
+  
+  print(cor(data_mean, z_det))
+```
+
+```{r}
+## LOGISTIC GROWTH MODEL Skewed Right
+## N: number of time steps
+  N <- c(20)     
+
+## M: number of simulation runs
+  M <- c(100)     
+  
+## x: initial value
+  x <- 1000    
+  
+## z: Data array  
+  z <- array(1:N*M, dim=c(N,M))
+
+## k: Carrying Capacity
+  k <- 5000
+  
+## r values (Bad, Eh, Good) 
+  r_bad <- -0.5
+  r_eh <- 1
+  r_good <- 1.5
+  
+## r distribution frequencies (Prob. of Bad, Eh, and Good years).
+  bad <- 0.6
+  eh <- 0.3
+  good <- 0.1
+ 
+## Looping thorugh simulation runs 
+  for(iter in c(1:(M))){      
+    
+  ## Setting initial condition 
+    z[1,iter] <- x        
+    
+  ## Looping through time steps
+    for(i in c(1:(N-1))){      
+      
+    ## test: Unifomrly distributed number between 0 and 1  (Our "coin flip") 
+        test <- runif(1, 0, 1)                      
+        if(test < bad ){
+          r <- r_bad
+        } else if(test < (bad + eh)) {
+          r <- r_eh
+        } else
+          r <- r_good
+        
+    ## If you want r to be uniformly distributed between -.5 and 1.5    
+     ## r <- runif(1,-.5, 1.5)           
+        
+    ## Exponential Growth model equation    
+      z[i+1,iter] <- z[i,iter] + r *z[i,iter]*(1-(z[i,iter])/k)   
+    }
+  }
+
+
+  
+  ## Calculating Mean growth rate:  
+  r_mean <- bad*r_bad + eh*r_eh + good*r_good
+
+  ## Deterministic Exponential Model
+  z_det <- c(20)
+  z_det[1] = x
+  for(t in c(1:(N-1))){
+    z_det[t+1] <- z_det[t] + r_mean*z_det[t]*(1-(z_det[t])/k)
+  }
+  
+  
+  ## Plotting Mean values for each time step
+  data_mean <- c(20)
+  for(t in c(1:20)){
+    data_mean[t] <- mean(z[t,])
+  }
+  
+  
+  ## Plotting all of the data
+  
+  par(mfrow=c(1,2))  ## Creats the two plots in onw window
+  
+  matplot(z,type="l")  ## All runs
+
+  plot(data_mean)  ## Means (circles)
+  points(z_det, type="l") ## Deterministic model with r_mean (Line)
+  
+  ## Correlation coefficient between the two types of "average".
+  
+  print(cor(data_mean, z_det))
+```
+
+```{r}
+## LOGISTIC GROWTH MODEL Skewed Left
+## N: number of time steps
+  N <- c(20)     
+
+## M: number of simulation runs
+  M <- c(100)     
+  
+## x: initial value
+  x <- 1000    
+  
+## z: Data array  
+  z <- array(1:N*M, dim=c(N,M))
+
+## k: Carrying Capacity
+  k <- 5000
+  
+## r values (Bad, Eh, Good) 
+  r_bad <- -0.5
+  r_eh <- 1
+  r_good <- 1.5
+  
+## r distribution frequencies (Prob. of Bad, Eh, and Good years).
+  bad <- 0.1
+  eh <- 0.3
+  good <- 0.6
+ 
+## Looping thorugh simulation runs 
+  for(iter in c(1:(M))){      
+    
+  ## Setting initial condition 
+    z[1,iter] <- x        
+    
+  ## Looping through time steps
+    for(i in c(1:(N-1))){      
+      
+    ## test: Unifomrly distributed number between 0 and 1  (Our "coin flip") 
+        test <- runif(1, 0, 1)                      
+        if(test < bad ){
+          r <- r_bad
+        } else if(test < (bad + eh)) {
+          r <- r_eh
+        } else
+          r <- r_good
+        
+    ## If you want r to be uniformly distributed between -.5 and 1.5    
+     ## r <- runif(1,-.5, 1.5)           
+        
+    ## Exponential Growth model equation    
+      z[i+1,iter] <- z[i,iter] + r *z[i,iter]*(1-(z[i,iter])/k)   
+    }
+  }
+
+
+  
+  ## Calculating Mean growth rate:  
+  r_mean <- bad*r_bad + eh*r_eh + good*r_good
+
+  ## Deterministic Exponential Model
+  z_det <- c(20)
+  z_det[1] = x
+  for(t in c(1:(N-1))){
+    z_det[t+1] <- z_det[t] + r_mean*z_det[t]*(1-(z_det[t])/k)
+  }
+  
+  
+  ## Plotting Mean values for each time step
+  data_mean <- c(20)
+  for(t in c(1:20)){
+    data_mean[t] <- mean(z[t,])
+  }
+  
+  
+  ## Plotting all of the data
+  
+  par(mfrow=c(1,2))  ## Creats the two plots in onw window
+  
+  matplot(z,type="l")  ## All runs
+
+  plot(data_mean)  ## Means (circles)
+  points(z_det, type="l") ## Deterministic model with r_mean (Line)
+  
+  ## Correlation coefficient between the two types of "average".
+  
+  print(cor(data_mean, z_det))
+```
+
+```{r}
+## LOGISTIC GROWTH MODEL Bimodal
+## N: number of time steps
+  N <- c(20)     
+
+## M: number of simulation runs
+  M <- c(100)     
+  
+## x: initial value
+  x <- 1000    
+  
+## z: Data array  
+  z <- array(1:N*M, dim=c(N,M))
+
+## k: Carrying Capacity
+  k <- 5000
+  
+## r values (Bad, Eh, Good) 
+  r_bad <- -0.5
+  r_eh <- 1
+  r_good <- 1.5
+  
+## r distribution frequencies (Prob. of Bad, Eh, and Good years).
+  bad <- 0.4
+  eh <- 0.2
+  good <- 0.4
+ 
+## Looping thorugh simulation runs 
+  for(iter in c(1:(M))){      
+    
+  ## Setting initial condition 
+    z[1,iter] <- x        
+    
+  ## Looping through time steps
+    for(i in c(1:(N-1))){      
+      
+    ## test: Unifomrly distributed number between 0 and 1  (Our "coin flip") 
+        test <- runif(1, 0, 1)                      
+        if(test < bad ){
+          r <- r_bad
+        } else if(test < (bad + eh)) {
+          r <- r_eh
+        } else
+          r <- r_good
+        
+    ## If you want r to be uniformly distributed between -.5 and 1.5    
+     ## r <- runif(1,-.5, 1.5)           
+        
+    ## Exponential Growth model equation    
+      z[i+1,iter] <- z[i,iter] + r *z[i,iter]*(1-(z[i,iter])/k)   
+    }
+  }
+
+
+  
+  ## Calculating Mean growth rate:  
+  r_mean <- bad*r_bad + eh*r_eh + good*r_good
+
+  ## Deterministic Exponential Model
+  z_det <- c(20)
+  z_det[1] = x
+  for(t in c(1:(N-1))){
+    z_det[t+1] <- z_det[t] + r_mean*z_det[t]*(1-(z_det[t])/k)
+  }
+  
+  
+  ## Plotting Mean values for each time step
+  data_mean <- c(20)
+  for(t in c(1:20)){
+    data_mean[t] <- mean(z[t,])
+  }
+  
+  
+  ## Plotting all of the data
+  
+  par(mfrow=c(1,2))  ## Creats the two plots in onw window
+  
+  matplot(z,type="l")  ## All runs
+
+  plot(data_mean)  ## Means (circles)
+  points(z_det, type="l") ## Deterministic model with r_mean (Line)
+  
+  ## Correlation coefficient between the two types of "average".
+  
+  print(cor(data_mean, z_det))
+```
+
+### 3 
+The symmetric and skewed left distributions were good fitting models.
+
+### 4
+```{r}
+## LOGISTIC GROWTH MODEL Symmetric
+## N: number of time steps
+  N <- c(20)     
+
+## M: number of simulation runs
+  M <- c(100)     
+  
+## x: initial value
+  x <- 10    
+  
+## z: Data array  
+  z <- array(1:N*M, dim=c(N,M))
+
+## k: Carrying Capacity
+  k <- 5000
+  
+## r values (Bad, Eh, Good) 
+  r_bad <- -0.5
+  r_eh <- 1
+  r_good <- 1.5
+  
+## r distribution frequencies (Prob. of Bad, Eh, and Good years).
+  bad <- 0.3
+  eh <- 0.4
+  good <- 0.3
+ 
+## Looping thorugh simulation runs 
+  for(iter in c(1:(M))){      
+    
+  ## Setting initial condition 
+    z[1,iter] <- x        
+    
+  ## Looping through time steps
+    for(i in c(1:(N-1))){      
+      
+    ## test: Unifomrly distributed number between 0 and 1  (Our "coin flip") 
+        test <- runif(1, 0, 1)                      
+        if(test < bad ){
+          r <- r_bad
+        } else if(test < (bad + eh)) {
+          r <- r_eh
+        } else
+          r <- r_good
+        
+    ## If you want r to be uniformly distributed between -.5 and 1.5    
+     ## r <- runif(1,-.5, 1.5)           
+        
+    ## Exponential Growth model equation    
+      z[i+1,iter] <- z[i,iter] + r *z[i,iter]*(1-(z[i,iter])/k)   
+    }
+  }
+
+
+  
+  ## Calculating Mean growth rate:  
+  r_mean <- bad*r_bad + eh*r_eh + good*r_good
+
+  ## Deterministic Exponential Model
+  z_det <- c(20)
+  z_det[1] = x
+  for(t in c(1:(N-1))){
+    z_det[t+1] <- z_det[t] + r_mean*z_det[t]*(1-(z_det[t])/k)
+  }
+  
+  
+  ## Plotting Mean values for each time step
+  data_mean <- c(20)
+  for(t in c(1:20)){
+    data_mean[t] <- mean(z[t,])
+  }
+  
+  
+  ## Plotting all of the data
+  
+  par(mfrow=c(1,2))  ## Creats the two plots in onw window
+  
+  matplot(z,type="l")  ## All runs
+
+  plot(data_mean)  ## Means (circles)
+  points(z_det, type="l") ## Deterministic model with r_mean (Line)
+  
+  ## Correlation coefficient between the two types of "average".
+  
+  print(cor(data_mean, z_det))
+```
+
+```{r}
+## LOGISTIC GROWTH MODEL Skewed Right
+## N: number of time steps
+  N <- c(20)     
+
+## M: number of simulation runs
+  M <- c(100)     
+  
+## x: initial value
+  x <- 1000    
+  
+## z: Data array  
+  z <- array(1:N*M, dim=c(N,M))
+
+## k: Carrying Capacity
+  k <- 5000
+  
+## r values (Bad, Eh, Good) 
+  r_bad <- -0.5
+  r_eh <- 1
+  r_good <- 1.5
+  
+## r distribution frequencies (Prob. of Bad, Eh, and Good years).
+  bad <- 0.6
+  eh <- 0.3
+  good <- 0.1
+ 
+## Looping thorugh simulation runs 
+  for(iter in c(1:(M))){      
+    
+  ## Setting initial condition 
+    z[1,iter] <- x        
+    
+  ## Looping through time steps
+    for(i in c(1:(N-1))){      
+      
+    ## test: Unifomrly distributed number between 0 and 1  (Our "coin flip") 
+        test <- runif(1, 0, 1)                      
+        if(test < bad ){
+          r <- r_bad
+        } else if(test < (bad + eh)) {
+          r <- r_eh
+        } else
+          r <- r_good
+        
+    ## If you want r to be uniformly distributed between -.5 and 1.5    
+     ## r <- runif(1,-.5, 1.5)           
+        
+    ## Exponential Growth model equation    
+      z[i+1,iter] <- z[i,iter] + r *z[i,iter]*(1-(z[i,iter])/k)   
+    }
+  }
+
+
+  
+  ## Calculating Mean growth rate:  
+  r_mean <- bad*r_bad + eh*r_eh + good*r_good
+
+  ## Deterministic Exponential Model
+  z_det <- c(20)
+  z_det[1] = x
+  for(t in c(1:(N-1))){
+    z_det[t+1] <- z_det[t] + r_mean*z_det[t]*(1-(z_det[t])/k)
+  }
+  
+  
+  ## Plotting Mean values for each time step
+  data_mean <- c(20)
+  for(t in c(1:20)){
+    data_mean[t] <- mean(z[t,])
+  }
+  
+  
+  ## Plotting all of the data
+  
+  par(mfrow=c(1,2))  ## Creats the two plots in onw window
+  
+  matplot(z,type="l")  ## All runs
+
+  plot(data_mean)  ## Means (circles)
+  points(z_det, type="l") ## Deterministic model with r_mean (Line)
+  
+  ## Correlation coefficient between the two types of "average".
+  
+  print(cor(data_mean, z_det))
+```
+
+```{r}
+## LOGISTIC GROWTH MODEL Skewed Left
+## N: number of time steps
+  N <- c(20)     
+
+## M: number of simulation runs
+  M <- c(100)     
+  
+## x: initial value
+  x <- 1000    
+  
+## z: Data array  
+  z <- array(1:N*M, dim=c(N,M))
+
+## k: Carrying Capacity
+  k <- 5000
+  
+## r values (Bad, Eh, Good) 
+  r_bad <- -0.5
+  r_eh <- 1
+  r_good <- 1.5
+  
+## r distribution frequencies (Prob. of Bad, Eh, and Good years).
+  bad <- 0.1
+  eh <- 0.3
+  good <- 0.6
+ 
+## Looping thorugh simulation runs 
+  for(iter in c(1:(M))){      
+    
+  ## Setting initial condition 
+    z[1,iter] <- x        
+    
+  ## Looping through time steps
+    for(i in c(1:(N-1))){      
+      
+    ## test: Unifomrly distributed number between 0 and 1  (Our "coin flip") 
+        test <- runif(1, 0, 1)                      
+        if(test < bad ){
+          r <- r_bad
+        } else if(test < (bad + eh)) {
+          r <- r_eh
+        } else
+          r <- r_good
+        
+    ## If you want r to be uniformly distributed between -.5 and 1.5    
+     ## r <- runif(1,-.5, 1.5)           
+        
+    ## Exponential Growth model equation    
+      z[i+1,iter] <- z[i,iter] + r *z[i,iter]*(1-(z[i,iter])/k)   
+    }
+  }
+
+
+  
+  ## Calculating Mean growth rate:  
+  r_mean <- bad*r_bad + eh*r_eh + good*r_good
+
+  ## Deterministic Exponential Model
+  z_det <- c(20)
+  z_det[1] = x
+  for(t in c(1:(N-1))){
+    z_det[t+1] <- z_det[t] + r_mean*z_det[t]*(1-(z_det[t])/k)
+  }
+  
+  
+  ## Plotting Mean values for each time step
+  data_mean <- c(20)
+  for(t in c(1:20)){
+    data_mean[t] <- mean(z[t,])
+  }
+  
+  
+  ## Plotting all of the data
+  
+  par(mfrow=c(1,2))  ## Creats the two plots in onw window
+  
+  matplot(z,type="l")  ## All runs
+
+  plot(data_mean)  ## Means (circles)
+  points(z_det, type="l") ## Deterministic model with r_mean (Line)
+  
+  ## Correlation coefficient between the two types of "average".
+  
+  print(cor(data_mean, z_det))
+```
+
+```{r}
+## LOGISTIC GROWTH MODEL Bimodal
+## N: number of time steps
+  N <- c(20)     
+
+## M: number of simulation runs
+  M <- c(100)     
+  
+## x: initial value
+  x <- 1000    
+  
+## z: Data array  
+  z <- array(1:N*M, dim=c(N,M))
+
+## k: Carrying Capacity
+  k <- 5000
+  
+## r values (Bad, Eh, Good) 
+  r_bad <- -0.5
+  r_eh <- 1
+  r_good <- 1.5
+  
+## r distribution frequencies (Prob. of Bad, Eh, and Good years).
+  bad <- 0.4
+  eh <- 0.2
+  good <- 0.4
+ 
+## Looping thorugh simulation runs 
+  for(iter in c(1:(M))){      
+    
+  ## Setting initial condition 
+    z[1,iter] <- x        
+    
+  ## Looping through time steps
+    for(i in c(1:(N-1))){      
+      
+    ## test: Unifomrly distributed number between 0 and 1  (Our "coin flip") 
+        test <- runif(1, 0, 1)                      
+        if(test < bad ){
+          r <- r_bad
+        } else if(test < (bad + eh)) {
+          r <- r_eh
+        } else
+          r <- r_good
+        
+    ## If you want r to be uniformly distributed between -.5 and 1.5    
+     ## r <- runif(1,-.5, 1.5)           
+        
+    ## Exponential Growth model equation    
+      z[i+1,iter] <- z[i,iter] + r *z[i,iter]*(1-(z[i,iter])/k)   
+    }
+  }
+
+
+  
+  ## Calculating Mean growth rate:  
+  r_mean <- bad*r_bad + eh*r_eh + good*r_good
+
+  ## Deterministic Exponential Model
+  z_det <- c(20)
+  z_det[1] = x
+  for(t in c(1:(N-1))){
+    z_det[t+1] <- z_det[t] + r_mean*z_det[t]*(1-(z_det[t])/k)
+  }
+  
+  
+  ## Plotting Mean values for each time step
+  data_mean <- c(20)
+  for(t in c(1:20)){
+    data_mean[t] <- mean(z[t,])
+  }
+  
+  
+  ## Plotting all of the data
+  
+  par(mfrow=c(1,2))  ## Creats the two plots in onw window
+  
+  matplot(z,type="l")  ## All runs
+
+  plot(data_mean)  ## Means (circles)
+  points(z_det, type="l") ## Deterministic model with r_mean (Line)
+  
+  ## Correlation coefficient between the two types of "average".
+  
+  print(cor(data_mean, z_det))
+```
+
+
+
+
+
+
+

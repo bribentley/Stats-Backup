@@ -1,0 +1,12 @@
+name: CISIMG
+title: CISIMG
+username:
+account: alanarnholt
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 275701
+bundleId: 1213743
+url: https://alanarnholt.shinyapps.io/CISIMG/
+when: 1518102347.73128
+asMultiple: FALSE
+asStatic: FALSE
