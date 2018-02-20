@@ -1,0 +1,32 @@
+---
+title: "Function for alpha, beta, power"
+output: html_document
+---
+
+```{r}
+library(ggplot2)
+
+powergraph <- function (sd,Ho,Ha,N){
+p <- ggplot(data = data.frame(x = c(Ho-3.6*sd, Ha+3.6*sd)), aes(x = x))
+dnorm_func <- function(x){
+  y <- dnorm(x, Ha, sd)
+  y[x < qnorm(0.95, Ho, sd)] <- NA
+  return(y)
+}
+dnorm_func1 <- function(x){
+  y <- dnorm(x, Ha, sd)
+  y[x >= qnorm(0.95, Ho, sd)] <- NA
+  return(y)
+}
+p + stat_function(fun = dnorm_func, geom = "area", fill = "blue", 
+    alpha = 0.2, n = 500) + 
+    stat_function(fun = dnorm_func1, geom = "area", fill = "blue") + 
+    geom_hline(yintercept = 0) + 
+    stat_function(fun = dnorm, args = list(Ho, sd), n = 500) + 
+    stat_function(fun = dnorm, args = list(Ha, sd), n = 500) + 
+    theme_bw() + 
+    labs(x = "", y = "")
+}
+
+powergraph(1,10,13,1)
+```
