@@ -120,7 +120,7 @@ $(document).ready(function () {
 
 <h1 class="title toc-ignore">Quiz #4</h1>
 <h4 class="author"><em>Bri Bentley</em></h4>
-<h4 class="date"><em>Last knit on February 28, 2018 at 02:08:01 PM</em></h4>
+<h4 class="date"><em>Last knit on February 28, 2018 at 03:18:40 PM</em></h4>
 
 </div>
 
@@ -129,14 +129,32 @@ $(document).ready(function () {
 <p>A new drug is being developed to lower the total cholestrol (measured in milligrams per deciliter or mg/dL) for a group of high risk patients whose total cholestrol values follow a normal distribution with an average total cholestrol of 300 mg/dL and a standard deviation for total cholestrol of 50mg/dL. The researchers working on the drug want to detect a 25 mg/dL reduction in cholestrol at least 80% of the time while controling the type one error rate at 0.01. You have been hired as the statistical consultant for the project.</p>
 <ol style="list-style-type: decimal">
 <li><p>Specify the null and alternative hypotheses you will use to test the new drug.</p>
-<p><span class="math inline">\(H_0:\)</span> = 300</p>
-<p><span class="math inline">\(H_1:\)</span> &lt; 300</p></li>
+<p><span class="math inline">\(H_0:\)</span> <span class="math inline">\(\mu\)</span> = 300</p>
+<p><span class="math inline">\(H_1:\)</span> <span class="math inline">\(\mu\)</span> &lt; 300</p></li>
 <li>How many patients should you include in your sample?
 <ol style="list-style-type: lower-alpha">
 <li>Use a <em>z-test</em> to answer the question.</li>
 <li>Use a <em>t-test</em> to answer the question.</li>
 </ol></li>
-<li><p>Explain the assumption you made when using a <em>z-test</em> to answer question 2. that was not needed to use a <em>t-test</em>. Do you think this assumption is reasonable?</p></li>
+</ol>
+<pre class="r"><code>std &lt;- 50
+delt &lt;- 25
+nt &lt;- 43
+power.t.test(nt, delt, std, sig.level = 0.01, type = &quot;one.sample&quot;, alternative = &quot;one.sided&quot;)</code></pre>
+<pre><code>
+     One-sample t test power calculation 
+
+              n = 43
+          delta = 25
+             sd = 50
+      sig.level = 0.01
+          power = 0.8011974
+    alternative = one.sided</code></pre>
+<ol start="3" style="list-style-type: decimal">
+<li>Explain the assumption you made when using a <em>z-test</em> to answer question 2. that was not needed to use a <em>t-test</em>. Do you think this assumption is reasonable?</li>
+</ol>
+<p>We assumed that our data was normal. I _____ think this assumption is reasonable given the graphs below.</p>
+<ol start="4" style="list-style-type: decimal">
 <li><p>Before the drug is administered, the lead physician states she believes the standard deviation for the patients administered the new drug will have a total cholestrol standard deviation between 40 mg/dL and 70 mg/dL. Use this new information to recompute your sample size requirements for the experiment using a <em>t-test</em>. Develop new recommendations and explain your new sample size requirements to meet the researchers’ objectives.</p>
 <ol style="list-style-type: lower-alpha">
 <li><p>Explain the costs associated with making type I and type II errors in this experiment. Is it possible simultaneously to reduce both type I and type II errors?</p></li>
