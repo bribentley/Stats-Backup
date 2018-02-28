@@ -1,0 +1,62 @@
+---
+title: "feb. 20th"
+output: html_document
+---
+
+```{r}
+pt(-1, 35)*2
+```
+
+```{r}
+curve(dt(x, 35), -6, 5, col = "blue")
+curve(dt(x, 35, -1), add = TRUE, col = "purple")
+abline(v = c(qt(0.05, 35), qt(.95, 35)), lty = "dashed", col = "black")
+```
+
+```{r}
+pt(qt(0.05, 35), 35, -1) + pt(qt(0.95, 35), 35, -1, lower.tail = FALSE)
+```
+
+```{r}
+power.t.test(n = 36, delta = -1, sd = 6, type = "one.sample", strict = TRUE, sig.level = 0.10, alternative = "two.sided")
+#to pull out power specifically:
+power.t.test(n = 36, delta = -1, sd = 6, type = "one.sample", strict = TRUE, sig.level = 0.10, alternative = "two.sided")$power
+```
+
+```{r}
+Delta <- seq(-8, 8, length = 500)
+power36 <- power.t.test(n = 36, delta = Delta, sd = 6, type = "one.sample", strict = TRUE, sig.level = 0.10, alternative = "two.sided")$power
+power9 <- power.t.test(n = 9, delta = Delta, sd = 6, type = "one.sample", strict = TRUE, sig.level = 0.10, alternative = "two.sided")$power
+plot(Delta, power36, type = "l")
+lines(Delta, power9, col = "purple")
+```
+
+```{r}
+set.seed(123)
+sims <- 50000
+n <- 36
+tstar <- numeric(sims)
+for(i in 1:sims){
+  rs <- rnorm(n, mean = 3, sd = 6)
+  tstar[i] <- (mean(rs) - 4)/(sd(rs)/sqrt(n))
+}
+
+hist(tstar)
+#this finds the simulated power of the above
+mean(tstar<=-1.69) + mean(tstar>=1.69)
+```
+
+```{r}
+library(ggplot2)
+
+ggplot(tstar)
+
+```
+
+
+
+
+
+
+
+

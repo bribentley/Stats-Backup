@@ -1,0 +1,61 @@
+---
+title: 'Quiz #4'
+author: "Bri Bentley"
+date: 'Last knit on `r format(Sys.time(), "%B %d, %Y at %X")`'
+output: 
+  bookdown::html_document2
+---
+
+```{r label = "setup", include=FALSE}
+library(tidyverse)
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE, fig.align = "center", comment = NA, fig.height = 3.5)
+```
+
+**Directions: Change the author field in the `YAML` from "Your Name" to your name using the convention of FirstName LastName. For example, my entry would be `author: "Alan Arnholt"`.   Store this file as `Quiz04.Rmd` inside your `Quizzes` directory.  When you finish, commit your changes and push your work to GitHub.  Use the commit message `Finished Quiz 04!`.  Verify you can see your files at `https://github.com/STAT-ATA-ASU/YourLast-YourFirst-STT5812-SP18/tree/master/Quizzes`.**
+
+
+A new drug is being developed to lower the total cholestrol (measured in milligrams per deciliter or mg/dL) for a group of high risk patients whose total cholestrol values follow a normal distribution with an average total cholestrol of 300 mg/dL and a standard deviation for total cholestrol of 50mg/dL. The researchers working on the drug want to detect a 25 mg/dL reduction in cholestrol at least 80% of the time while controling the type one error rate at 0.01.  You have been hired as the statistical consultant for the project.
+
+1.  Specify the null and alternative hypotheses you will use to test the new drug.
+
+    $H_0:$ = 300
+
+    $H_1:$ < 300
+
+2.  How many patients should you include in your sample? 
+    a.  Use a *z-test* to answer the question.
+    
+```{r}
+mu <- 300
+std <- 50
+xbar <- 275
+z <- qnorm(.01)
+n <- ((std*z)/(xbar - mu))^2
+n
+```
+
+Therefore we need 22 patients.
+
+    b.  Use a *t-test* to answer the question.
+    
+```{r}
+z_t <- qt(.01, )
+n_t <- ((std*z_t)/(xbar - mu))^2
+n_t
+```
+
+
+3.  Explain the assumption you made when using a *z-test* to answer question 2. that was not needed to use a *t-test*.  Do you think this assumption is reasonable? 
+
+We assumed that our data was normal. I _____ think this assumption is reasonable given the graphs below.
+
+
+
+
+    
+4.  Before the drug is administered, the lead physician states she believes the standard deviation for the patients administered the new drug will have a total cholestrol standard deviation between 40 mg/dL and 70 mg/dL.  Use this new information to recompute your sample size requirements for the experiment using a *t-test*.  Develop new recommendations and explain your new sample size requirements to meet the researchers' objectives.
+
+    a.  Explain the costs associated with making type I and type II errors in this experiment.  Is it possible simultaneously to reduce both type I and type II errors?
+    
+    b.  What sample size is need to ensure the type II error is no greater than the type I error?
+
