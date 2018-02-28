@@ -23,37 +23,64 @@ A new drug is being developed to lower the total cholestrol (measured in milligr
     $H_1:$ $\mu$ < 300
 
 2.  How many patients should you include in your sample? 
-    a.  Use a *z-test* to answer the question. 317 (using shiny power app)
-    b.  Use a *t-test* to answer the question. 43 (using shiny power app)
+    a.  Use a *z-test* to answer the question. 317 *shiny app*
+    b.  Use a *t-test* to answer the question. 43
     
-Check for power for the z distribution
+For the z distribution
 ```{r}
-library(pwr)
-pwr.norm.test(d = 25, n = NULL, sig.level = 0.01, power = 0.80, alternative = "less")
+z <- qnorm(.01, 300, 50/sqrt(40))
+z
+POWER <- pnorm(z, 275, 50/sqrt(40))
+POWER
 ```
 
-Check of the power for the t distribution.   
 ```{r}
-std <- 50
-delt <- 25
-nt <- 43
-power.t.test(nt, delt, std, sig.level = 0.01, type = "one.sample", alternative = "one.sided")
+#library(pwr)
+#pwr.norm.test(d = 25, n = NULL, sig.level = 0.01, power = 0.80, alternative = "less")
 ```
+
+For the t distribution.   
+```{r}
+ power.t.test(n = NULL, delta = 25, sd = 50, sig.level = 0.01,
+              power = .80, type = "one.sample", alternative = "one.sided")
+```
+
+Checked using the shiny power app.
 
 3.  Explain the assumption you made when using a *z-test* to answer question 2. that was not needed to use a *t-test*.  Do you think this assumption is reasonable? 
 
-We assumed that our data was normal. I _____ think this assumption is reasonable given the graphs below.
+Both the *z-test* and the *t-test* assume that the data are independently sampled from a normal distribution. The difference between the *z-test* and the *t-test* is in the assumption of the standard deviation $\sigma$ of the underlying normal distribution. A *z-test* assumes that $\sigma$ is known; a *t-test* does not.
 
-```{r}
-library(ggplot2)
-ggplot(data = , aes()) +
-  stat_qq() +
-  theme_bw()
-```
+I do **???** think this assumption is reasonable 
 
 4.  Before the drug is administered, the lead physician states she believes the standard deviation for the patients administered the new drug will have a total cholestrol standard deviation between 40 mg/dL and 70 mg/dL.  Use this new information to recompute your sample size requirements for the experiment using a *t-test*.  Develop new recommendations and explain your new sample size requirements to meet the researchers' objectives.
 
+```{r}
+std_40 <- power.t.test(n = NULL, delta = 25, sd = 40, sig.level = 0.01,
+              power = .80, type = "one.sample", alternative = "one.sided")$n
+std_70 <- power.t.test(n = NULL, delta = 25, sd = 70, sig.level = 0.01,
+              power = .80, type = "one.sample", alternative = "one.sided")$n
+std_70
+std_40
+```
+
+Based off of the lead physician's belief that the standard deviation will be between 40 and 70 mg/dL, we suggest a sample size of at least 82 participants.
+
     a.  Explain the costs associated with making type I and type II errors in this experiment.  Is it possible simultaneously to reduce both type I and type II errors?
     
+    In this situation, a type I error would be when we reject the mean of 300 mg/dL when it is actually true.     A type II error would be when we fail to reject the mean of 300 mg/dL when it is actually false.
+    
+    It is not possible to simultaneously reduce both type I and II error.
+    
     b.  What sample size is need to ensure the type II error is no greater than the type I error?
+
+```{r}
+beta <- .2
+alpha <- 0.22
+power.t.test(n = NULL, delta = 25, sd = 70, sig.level = 0.22,
+              power = 1 - beta, type = "one.sample", alternative = "one.sided")$n
+```
+
+A sample size of 21 is needed to ensure the type II error is no greater than the type I error at a power of 80%.
+
 

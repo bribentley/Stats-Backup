@@ -120,7 +120,7 @@ $(document).ready(function () {
 
 <h1 class="title toc-ignore">Quiz #4</h1>
 <h4 class="author"><em>Bri Bentley</em></h4>
-<h4 class="date"><em>Last knit on February 28, 2018 at 03:18:40 PM</em></h4>
+<h4 class="date"><em>Last knit on February 28, 2018 at 05:26:26 PM</em></h4>
 
 </div>
 
@@ -133,34 +133,62 @@ $(document).ready(function () {
 <p><span class="math inline">\(H_1:\)</span> <span class="math inline">\(\mu\)</span> &lt; 300</p></li>
 <li>How many patients should you include in your sample?
 <ol style="list-style-type: lower-alpha">
-<li>Use a <em>z-test</em> to answer the question.</li>
-<li>Use a <em>t-test</em> to answer the question.</li>
+<li>Use a <em>z-test</em> to answer the question. 317 <em>shiny app</em></li>
+<li>Use a <em>t-test</em> to answer the question. 43</li>
 </ol></li>
 </ol>
-<pre class="r"><code>std &lt;- 50
-delt &lt;- 25
-nt &lt;- 43
-power.t.test(nt, delt, std, sig.level = 0.01, type = &quot;one.sample&quot;, alternative = &quot;one.sided&quot;)</code></pre>
+<p>For the z distribution</p>
+<pre class="r"><code>z &lt;- qnorm(.01, 300, 50/sqrt(40))
+z</code></pre>
+<pre><code>[1] 281.6086</code></pre>
+<pre class="r"><code>POWER &lt;- pnorm(z, 275, 50/sqrt(40))
+POWER</code></pre>
+<pre><code>[1] 0.7984028</code></pre>
+<pre class="r"><code>#library(pwr)
+#pwr.norm.test(d = 25, n = NULL, sig.level = 0.01, power = 0.80, alternative = &quot;less&quot;)</code></pre>
+<p>For the t distribution.</p>
+<pre class="r"><code> power.t.test(n = NULL, delta = 25, sd = 50, sig.level = 0.01,
+              power = .80, type = &quot;one.sample&quot;, alternative = &quot;one.sided&quot;)</code></pre>
 <pre><code>
      One-sample t test power calculation 
 
-              n = 43
+              n = 42.89133
           delta = 25
              sd = 50
       sig.level = 0.01
-          power = 0.8011974
+          power = 0.8
     alternative = one.sided</code></pre>
+<p>Checked using the shiny power app.</p>
 <ol start="3" style="list-style-type: decimal">
 <li>Explain the assumption you made when using a <em>z-test</em> to answer question 2. that was not needed to use a <em>t-test</em>. Do you think this assumption is reasonable?</li>
 </ol>
-<p>We assumed that our data was normal. I _____ think this assumption is reasonable given the graphs below.</p>
+<p>Both the <em>z-test</em> and the <em>t-test</em> assume that the data are independently sampled from a normal distribution. The difference between the <em>z-test</em> and the <em>t-test</em> is in the assumption of the standard deviation <span class="math inline">\(\sigma\)</span> of the underlying normal distribution. A <em>z-test</em> assumes that <span class="math inline">\(\sigma\)</span> is known; a <em>t-test</em> does not.</p>
+<p>I do <strong>???</strong> think this assumption is reasonable</p>
 <ol start="4" style="list-style-type: decimal">
-<li><p>Before the drug is administered, the lead physician states she believes the standard deviation for the patients administered the new drug will have a total cholestrol standard deviation between 40 mg/dL and 70 mg/dL. Use this new information to recompute your sample size requirements for the experiment using a <em>t-test</em>. Develop new recommendations and explain your new sample size requirements to meet the researchers’ objectives.</p>
-<ol style="list-style-type: lower-alpha">
-<li><p>Explain the costs associated with making type I and type II errors in this experiment. Is it possible simultaneously to reduce both type I and type II errors?</p></li>
-<li><p>What sample size is need to ensure the type II error is no greater than the type I error?</p></li>
-</ol></li>
+<li>Before the drug is administered, the lead physician states she believes the standard deviation for the patients administered the new drug will have a total cholestrol standard deviation between 40 mg/dL and 70 mg/dL. Use this new information to recompute your sample size requirements for the experiment using a <em>t-test</em>. Develop new recommendations and explain your new sample size requirements to meet the researchers’ objectives.</li>
 </ol>
+<pre class="r"><code>std_40 &lt;- power.t.test(n = NULL, delta = 25, sd = 40, sig.level = 0.01,
+              power = .80, type = &quot;one.sample&quot;, alternative = &quot;one.sided&quot;)$n
+std_70 &lt;- power.t.test(n = NULL, delta = 25, sd = 70, sig.level = 0.01,
+              power = .80, type = &quot;one.sample&quot;, alternative = &quot;one.sided&quot;)$n
+std_70</code></pre>
+<pre><code>[1] 81.41049</code></pre>
+<pre class="r"><code>std_40</code></pre>
+<pre><code>[1] 28.45925</code></pre>
+<p>Based off of the lead physician’s belief that the standard deviation will be between 40 and 70 mg/dL, we suggest a sample size of at least 82 participants.</p>
+<pre><code>a.  Explain the costs associated with making type I and type II errors in this experiment.  Is it possible simultaneously to reduce both type I and type II errors?
+
+In this situation, a type I error would be when we reject the mean of 300 mg/dL when it is actually true.     A type II error would be when we fail to reject the mean of 300 mg/dL when it is actually false.
+
+It is not possible to simultaneously reduce both type I and II error.
+
+b.  What sample size is need to ensure the type II error is no greater than the type I error?</code></pre>
+<pre class="r"><code>beta &lt;- .2
+alpha &lt;- 0.22
+power.t.test(n = NULL, delta = 25, sd = 70, sig.level = 0.22,
+              power = 1 - beta, type = &quot;one.sample&quot;, alternative = &quot;one.sided&quot;)$n</code></pre>
+<pre><code>[1] 20.73575</code></pre>
+<p>A sample size of 21 is needed to ensure the type II error is no greater than the type I error at a power of 80%.</p>
 
 
 
