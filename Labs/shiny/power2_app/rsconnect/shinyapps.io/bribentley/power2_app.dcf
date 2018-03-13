@@ -1,0 +1,12 @@
+name: power2_app
+title: power2_app
+username:
+account: bribentley
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 298511
+bundleId: 1266276
+url: https://bribentley.shinyapps.io/power2_app/
+when: 1520953262.30607
+asMultiple: FALSE
+asStatic: FALSE

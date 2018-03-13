@@ -128,13 +128,13 @@ powerg <- function(n = 36, delta = 1, sd = 6, alpha = 0.10, alternative = c("two
                        pnorm(qnorm(1- alpha/2,0,sd/sqrt(n)), gamma, sd/sqrt(n), lower.tail = FALSE), 4)
     }
     
-    p + stat_function(fun = dnorm_fun1, geom = "area", n = 500, fill = "red", alpha = 0.5) + 
-      stat_function(fun = dnorm_fun2, geom = "area", n = 500, fill = "darkorchid4", alpha = 0.5) + 
+    p + stat_function(fun = dnorm_fun1, geom = "area", n = 500, fill = "purple", alpha = 0.5) + 
+      stat_function(fun = dnorm_fun2, geom = "area", n = 500, fill = "green", alpha = 0.5) + 
       stat_function(fun = dnorm, args = list(0,sd/sqrt(n)), n = 500, color = "black") + 
       stat_function(fun = dnorm, args = list( gamma,sd/sqrt(n)), n = 500, color = "black") + 
       geom_hline(yintercept = 0) + 
       theme_bw() + 
-      labs(x = " ", y = " ", title = paste0("Power ","(",POWER,") is the sum of all blue and purple shaded areas"))
+      labs(x = " ", y = " ", title = paste0("Power ","(",POWER,")"))
   }
 }
 

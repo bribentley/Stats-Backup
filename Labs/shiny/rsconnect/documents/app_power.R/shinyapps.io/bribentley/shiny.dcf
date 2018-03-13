@@ -5,9 +5,9 @@ account: bribentley
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 291092
-bundleId: 1247433
+bundleId: 1266254
 url: https://bribentley.shinyapps.io/shiny/
-when: 1519932494.45604
+when: 1520952660.78675
 asMultiple: FALSE
 asStatic: FALSE
-ignoredFiles: Funct for alpha, beta, power.Rmd|Funct_for_alpha,_beta,_power.html|binomplot2/app.R
+ignoredFiles: Funct for alpha, beta, power.Rmd|Funct_for_alpha,_beta,_power.html|Power_App_Presentation.html|Power_App_Presentation.Rmd|binomplot2/app.R|power2_app/app.R
