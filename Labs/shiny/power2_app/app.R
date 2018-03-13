@@ -141,34 +141,41 @@ powerg <- function(n = 36, delta = 1, sd = 6, alpha = 0.10, alternative = c("two
 # Define UI for application that draws a histogram
 ui <- fluidPage(
   
-  # Application title
-  titlePanel("Z/T Power Analyzer"),
+  titlePanel("Z-Test and T-Test Power App"),
   
   # Sidebar with a slider input for number of bins 
   sidebarLayout(
     sidebarPanel(
+      
+      # radioButtons(inputID="Alt", label="Select alternative hypothesis:",
+      #             choices=c("(\\H_A:\\mu \\neq \\mu_0\\)"="two.sided",
+      #                      "\\(H_A:\\mu>\\mu_0\\)"="greater",
+      #                     "\\(H_A:\\mu<\\mu_0\\)"="less"),
+      #          selected="two.sided"),
+      
       selectInput(inputId = "Alt",
                   label = "Alternative Hypothesis",
                   selected = "Left Tailed",
                   choices=c("Left Tailed","Right Tailed","Two Tailed")
       ),
+      
       numericInput("Delta",
-                   "Difference in mean (max=100)",
+                   "Ho - Ha: Difference of Means (max=100)",
                    min = -100,
                    max = 100,
                    value = 0
       ),
       numericInput("Samp",
-                   "Sample Size (postitive integer between 3 and 10,000)",
-                   min = 3,
-                   max = 10000,
-                   value = 30,
+                   "Sample Size (postitive integer between 5 and 5,000)",
+                   min = 5,
+                   max = 5000,
+                   value = 50,
                    step = 5
       ),
       numericInput("std",
-                   "Standard Deviation (max=10,000)",
+                   "Standard Deviation (max=1,000)",
                    min = 0,
-                   max = 10000,
+                   max = 1000,
                    value = 1
       ),
       radioButtons(inputId = "sigma",
@@ -178,12 +185,12 @@ ui <- fluidPage(
                    inline = FALSE
       ),
       sliderInput("alpha",
-                   "Alpha",
-                   min = 0.001,
-                   max = 0.25,
-                   value = .05,
-                   step = .001,
-                   ticks = TRUE
+                  "Alpha",
+                  min = 0.001,
+                  max = 0.25,
+                  value = .05,
+                  step = .001,
+                  ticks = TRUE
       )
     ), 
     
@@ -194,13 +201,24 @@ ui <- fluidPage(
     
   )
 )
-
 # Define server logic required to draw a histogram
+
+
+
 server <- function(input, output) {
   alter<-reactive({switch(input$Alt,
-                          "Left Tailed"="less",
+                          "Left Tailed" = "less",
                           "Right Tailed" = "greater",
-                          "Two Tailed"="two.sided") })
+                          "Two Tailed" = "two.sided") })
+  
+  
+  #        "\\(H_A:\\mu<\\mu_0\\)"="less",
+  #       "\\(H_A:\\mu>\\mu_0\\)" = "greater",
+  #      "\\(H_A:\\mu \\neq \\mu_0\\)"="two.sided") })
+  
+  #        "Left Tailed" = "less",
+  #      "Right Tailed" = "greater",
+  #     "Two Tailed" = "two.sided") })
   output$distPlot <- renderPlot({
     powerg(n = input$Samp, delta = input$Delta, sd = input$std, alpha = input$alpha, alternative = alter(), sig.known = input$sigma)
   })
