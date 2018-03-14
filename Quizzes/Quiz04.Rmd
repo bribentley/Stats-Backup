@@ -23,7 +23,7 @@ A new drug is being developed to lower the total cholestrol (measured in milligr
     $H_1:$ $\mu$ < 300
 
 2.  How many patients should you include in your sample? 
-    a.  Use a *z-test* to answer the question. 40
+    a.  Use a *z-test* to answer the question. 41
     b.  Use a *t-test* to answer the question. 43
     
 For the z distribution

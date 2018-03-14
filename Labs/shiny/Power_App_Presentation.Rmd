@@ -3,7 +3,7 @@ title: "Power App Presentation"
 output: ioslides_presentation
 ---
 
-## First try at a Powwer App
+## First try at a Power App
 
 ```{r}
 knitr::include_app("https://bribentley.shinyapps.io/shiny/")
