@@ -5,8 +5,8 @@ account: bribentley
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 298511
-bundleId: 1267097
+bundleId: 1270303
 url: https://bribentley.shinyapps.io/power2_app/
-when: 1520977322.65476
+when: 1521128218.72987
 asMultiple: FALSE
 asStatic: FALSE

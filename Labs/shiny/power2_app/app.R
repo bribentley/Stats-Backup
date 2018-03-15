@@ -6,11 +6,11 @@ powerg <- function(n = 36, delta = 1, sd = 6, alpha = 0.10, alternative = c("two
   gamma <- (delta)/(sd/sqrt(n))
   if(sig.known=="Variance Known"){
     dv <- if(gamma < 0){
-      ll <- -5*sd/sqrt(n) + gamma
+      ll <- -5*sd/sqrt(n) + delta
       ul <- 5*sd/sqrt(n)
     } else {
       ll <- -5*sd/sqrt(n)
-      ul <- 5*sd/sqrt(n) + gamma
+      ul <- 5*sd/sqrt(n) + delta
     }
   }
   else {
@@ -91,11 +91,11 @@ powerg <- function(n = 36, delta = 1, sd = 6, alpha = 0.10, alternative = c("two
       }
       
       dnorm_fun2 <- function(x){
-        y <- dnorm(x, gamma, sd/sqrt(n))
+        y <- dnorm(x, delta, sd/sqrt(n))
         y[x > qnorm(alpha, 0, sd/sqrt(n))] <- NA
         return(y)
       }
-      POWER <- round(pnorm(qnorm(alpha, 0, sd/sqrt(n)), gamma, sd/sqrt(n)), 4)
+      POWER <- round(pnorm(qnorm(alpha, 0, sd/sqrt(n)), delta, sd/sqrt(n)), 4)
     }
     else if (alternative == "greater"){
       dnorm_fun1 <- function(x){
@@ -105,11 +105,11 @@ powerg <- function(n = 36, delta = 1, sd = 6, alpha = 0.10, alternative = c("two
       }
       
       dnorm_fun2 <- function(x){
-        y <- dnorm(x, gamma, sd/sqrt(n))
+        y <- dnorm(x, delta, sd/sqrt(n))
         y[x < qnorm(1-alpha, 0, sd/sqrt(n))] <- NA
         return(y)
       }
-      POWER <- round(pnorm(qnorm(1-alpha, 0, sd/sqrt(n)), gamma, sd/sqrt(n),lower.tail = FALSE), 4)
+      POWER <- round(pnorm(qnorm(1-alpha, 0, sd/sqrt(n)), delta, sd/sqrt(n),lower.tail = FALSE), 4)
     }
     ####2-TAIL STUFF####
     else{
@@ -120,18 +120,18 @@ powerg <- function(n = 36, delta = 1, sd = 6, alpha = 0.10, alternative = c("two
       }
       
       dnorm_fun2 <- function(x){
-        y <- dnorm(x, gamma, sd/sqrt(n))
+        y <- dnorm(x, delta, sd/sqrt(n))
         y[x > qnorm(alpha/2, 0,sd/sqrt(n)) & x < qnorm(1 - alpha /2, 0,sd/sqrt(n))] <- NA
         return(y)
       } 
-      POWER <- round(pnorm(qnorm(alpha/2, 0,sd/sqrt(n)), gamma, sd/sqrt(n)) + 
-                       pnorm(qnorm(1- alpha/2,0,sd/sqrt(n)), gamma, sd/sqrt(n), lower.tail = FALSE), 4)
+      POWER <- round(pnorm(qnorm(alpha/2, 0,sd/sqrt(n)), delta, sd/sqrt(n)) + 
+                       pnorm(qnorm(1- alpha/2,0,sd/sqrt(n)), delta, sd/sqrt(n), lower.tail = FALSE), 4)
     }
     
     p + stat_function(fun = dnorm_fun1, geom = "area", n = 500, fill = "purple", alpha = 0.5) + 
       stat_function(fun = dnorm_fun2, geom = "area", n = 500, fill = "green", alpha = 0.5) + 
       stat_function(fun = dnorm, args = list(0,sd/sqrt(n)), n = 500, color = "black") + 
-      stat_function(fun = dnorm, args = list( gamma,sd/sqrt(n)), n = 500, color = "black") + 
+      stat_function(fun = dnorm, args = list(delta, sd/sqrt(n)), n = 500, color = "black") + 
       geom_hline(yintercept = 0) + 
       theme_bw() + 
       labs(x = " ", y = " ", title = paste0("Power ","(",POWER,")"))

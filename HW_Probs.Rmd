@@ -1,0 +1,156 @@
+---
+title: "Chapter 9 Problems 19 & 31"
+author: "Bri Bentley"
+date: '`r format(Sys.time(), "%b %d, %Y")`'
+output: 
+  bookdown::html_document2: 
+    highlight: textmate
+    theme: yeti
+---
+
+**19. The director of urban housing in the Vitoria, Spain claims that at least 50% of all apartments have more than one bathroom and that at least 75% of all apartments have an elevator.**
+
+```{r}
+library(PASWR2)
+summary(VIT2005)
+head(VIT2005)
+```
+
+A) Can the director's claim about bathrooms be contradicted? Test the appropriate hypothesis using $\alpha = 0.10$. Note that the number of bathrooms is stored in the variable `toilets` in the data frame `VIT2005`.
+
+      $H_0: p = 0.50$ versus $H_1: p < 0.50$
+      
+```{r}
+#Test statistic is the number of aparments that have more than one bathroom
+xtabs(~toilets, data = VIT2005)
+```
+
+    Therefore, the value of the test statistic is 102 out of 218.
+
+```{r}
+#Finding the p-vlaue
+binom.test(x = 102, n = 218, p = 0.50, alternative = "less")
+```
+
+    Thus we fail to reject the null hypothesis because 0.1893 > 0.10.
+
+    English Conclusion: There is no significant evidence to contradict the claim that there is at least one bathroom in 50% of the apartments in Vitoria, Spain.
+
+
+B) Can the director's claim about elevators be substantiated using an $\alpha = 0.10$? Use both an approximate method as well as an exact method to reach a conclusion. Are the methods in agreement?
+
+  * Exact Method:
+  
+    $H_0: p = 0.75$ versus $H_1: p > 0.75$
+      
+```{r}
+#Test statistic is the number of apartments that have more than one elevator
+xtabs(~elevator, data = VIT2005)
+```
+
+    Therefore, the value of the test statistic is 174 out of out of 218.
+    
+```{r}
+#Finding the p-value
+binom.test(x = 174, n = 218, p = 0.75, alternative = "greater")
+```
+
+    Thus we reject the null in favor of the alternative because 0.05643 < 0.10.
+    
+    English Conclusion: There is evidence to support the claim that at least 75% of apartments have an elevator.
+    
+  * Approximate Method:
+  
+  ????
+  
+C) Test whether the proportion of apartments built prior to 1980 without garages have a smaller proportion with elevators than without elevators.
+
+```{r}
+#Subset the data, note that we want when the age > 25 because 2005 - 1980 is 25 so that will give us all the data prior to 1980
+Apartments <- xtabs(~elevator + garage, data = subset(VIT2005, subset = age > 25))
+Apartments
+```
+
+    Thus 19 apartments without garages did not have an elevator and 22 apartments without garages did have an elevator. There were a total of 45 apartments sampled prior to 1980.
+
+```{r}
+fisher.test(Apartments, alternative = "greater")
+```
+
+    Therefore we fail to reject the null since 0.1003 > 0.10.
+    
+    English Conclusion: There is no significant evidence that the proportion of apartments built prior to 1980 with elevators and no garages is lower than the proportion of apartments built prior to 1980 without elevators and no garages.
+    
+---    
+    
+**31. Cleveland (1993) suggested that the yeild recorded for the year 1932 was actually 1931's yield and vice versa for the Morris site in the** `barley` **data set after examining the data using trellis graphics.**
+
+```{r}
+summary(barley)
+head(barley)
+```
+
+A) Use the package lattice to recreate the trellis graph that would have given Cleveland his insight. Change the default layout so the graph has two columns and three rows of plots.
+
+```{r}
+library(lattice)
+dotplot(variety ~ yield | site, data = barley, groups = year,
+        key = simpleKey(levels(barley$year), space = "right"),
+        xlab = "Barley Yield (bushels/acre) ", aspect = 0.5, layout = c(2,3), ylab=NULL)
+```
+
+B) Recreate the graph from (A) using `ggplot2`.
+
+```{r}
+library(ggplot2)
+ggplot(data = barley, aes(yield, variety, color = year, shape = year)) +
+  geom_point() +
+  theme_bw() +
+  facet_wrap(~site, ncol = 2) +
+  labs(x = "Barley Yield (bushels/acre)", y = "")
+```
+
+C) If the years were actually switched as described when the data was originally recorded, is there evidence to suggest the average barley yield in 1932 (recorded as 1931's yield) for the Morris site is greater than the average barley yield in 1932 for the Crookston site? Use the 5-step procedure to test the appropriate hypotheses using an $\alpha = 0.05$ significance level.
+
+```{r}
+Morris <- with(data = barley, yield[year == "1931" & site == "Morris"])
+Crookston <- with(data = barley, yield[year == "1932" & site == "Crookston"])
+Morris
+Crookston
+```
+
+  * Step 1:  Hypotheses
+    
+    $H_0: \mu = 0$ versus $H_1: \mu > 0$
+
+  * Step 2: Test Statistic
+  
+```{r}
+Difference <- Morris - Crookston
+meandif <- mean(Difference)
+meandif
+```
+
+  * Step 3: Rejection Region Calculations
+  
+```{r}
+RR <- qt(0.95, 9)
+RR
+t.test(Difference, alternative = "greater")
+```
+
+    The value of the standardized test statistic is -1.1307
+    
+  * Step 4: Statistical Conclusion
+  
+    Given the rejection region, we fail to reject the null because -1.1307 < 1.8331.
+    Also given the p-value, we fail to reject the null because 0.8563 > 0.05
+    
+  * Step 5: English Conclusion
+    
+    There is no significant evidence that shows the 1932 mean barley yield for Morris is greater than the 1932 mean barley yield for Crookston.
+
+
+
+
+
