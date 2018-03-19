@@ -25,16 +25,16 @@ A) Can the director's claim about bathrooms be contradicted? Test the appropriat
 xtabs(~toilets, data = VIT2005)
 ```
 
-    Therefore, the value of the test statistic is 102 out of 218.
+  Therefore, the value of the test statistic is 102 out of 218.
 
 ```{r}
 #Finding the p-vlaue
 binom.test(x = 102, n = 218, p = 0.50, alternative = "less")
 ```
 
-    Thus we fail to reject the null hypothesis because 0.1893 > 0.10.
+  Thus we fail to reject the null hypothesis because 0.1893 > 0.10.
 
-    English Conclusion: There is no significant evidence to contradict the claim that there is at least one bathroom in 50% of the apartments in Vitoria, Spain.
+  English Conclusion: There is no significant evidence to contradict the claim that there is at least one bathroom in 50% of the apartments in Vitoria, Spain.
 
 
 B) Can the director's claim about elevators be substantiated using an $\alpha = 0.10$? Use both an approximate method as well as an exact method to reach a conclusion. Are the methods in agreement?
@@ -48,20 +48,33 @@ B) Can the director's claim about elevators be substantiated using an $\alpha = 
 xtabs(~elevator, data = VIT2005)
 ```
 
-    Therefore, the value of the test statistic is 174 out of out of 218.
+  Therefore, the value of the test statistic is 174 out of out of 218.
     
 ```{r}
 #Finding the p-value
 binom.test(x = 174, n = 218, p = 0.75, alternative = "greater")
 ```
 
-    Thus we reject the null in favor of the alternative because 0.05643 < 0.10.
+  Thus we reject the null in favor of the alternative because 0.05643 < 0.10.
     
-    English Conclusion: There is evidence to support the claim that at least 75% of apartments have an elevator.
+  English Conclusion: There is evidence to support the claim that at least 75% of apartments have an elevator.
     
   * Approximate Method:
   
-  ????
+    $H_0: p = 0.75$ versus $H_1: p > 0.75$
+  
+```{r}
+#Without continuity correction
+prop.test(x = 174, n = 218, p = 0.75, alternative = "greater", correct = FALSE)
+#with continuity correction
+prop.test(x = 174, n = 218, p = 0.75, alternative = "greater", correct = TRUE)
+```
+
+  Thus we reject the null in favor of the alternative because the p-value without continuity correction, 0.05026, or the p-value with continuity correction, 0.05889, is less than our significance level of 0.10.
+  
+  English Conclusion: There is evidence to support the claim that at least 75% of apartments have an elevator.
+  
+  Using both methods, we rejected the null in favor of the alternative so the methods are in agreement.
   
 C) Test whether the proportion of apartments built prior to 1980 without garages have a smaller proportion with elevators than without elevators.
 
@@ -71,15 +84,15 @@ Apartments <- xtabs(~elevator + garage, data = subset(VIT2005, subset = age > 25
 Apartments
 ```
 
-    Thus 19 apartments without garages did not have an elevator and 22 apartments without garages did have an elevator. There were a total of 45 apartments sampled prior to 1980.
+  Thus 19 apartments without garages did not have an elevator and 22 apartments without garages did have an elevator. There were a total of 45 apartments sampled prior to 1980.
 
 ```{r}
 fisher.test(Apartments, alternative = "greater")
 ```
 
-    Therefore we fail to reject the null since 0.1003 > 0.10.
+  Therefore we fail to reject the null since 0.1003 > 0.10.
     
-    English Conclusion: There is no significant evidence that the proportion of apartments built prior to 1980 with elevators and no garages is lower than the proportion of apartments built prior to 1980 without elevators and no garages.
+  English Conclusion: There is no significant evidence that the proportion of apartments built prior to 1980 with elevators and no garages is lower than the proportion of apartments built prior to 1980 without elevators and no garages.
     
 ---    
     
@@ -139,18 +152,13 @@ RR
 t.test(Difference, alternative = "greater")
 ```
 
-    The value of the standardized test statistic is -1.1307
+  The value of the standardized test statistic is -1.1307
     
   * Step 4: Statistical Conclusion
   
-    Given the rejection region, we fail to reject the null because -1.1307 < 1.8331.
+  Given the rejection region, we fail to reject the null because -1.1307 < 1.8331.
     Also given the p-value, we fail to reject the null because 0.8563 > 0.05
     
   * Step 5: English Conclusion
     
-    There is no significant evidence that shows the 1932 mean barley yield for Morris is greater than the 1932 mean barley yield for Crookston.
-
-
-
-
-
+  There is no significant evidence that shows the 1932 mean barley yield for Morris is greater than the 1932 mean barley yield for Crookston.

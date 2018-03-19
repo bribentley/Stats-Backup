@@ -120,7 +120,7 @@ $(document).ready(function () {
 
 <h1 class="title toc-ignore">Chapter 9 Problems 19 &amp; 31</h1>
 <h4 class="author"><em>Bri Bentley</em></h4>
-<h4 class="date"><em>Mar 15, 2018</em></h4>
+<h4 class="date"><em>Mar 19, 2018</em></h4>
 
 </div>
 
@@ -186,7 +186,7 @@ xtabs(~toilets, data = VIT2005)</code></pre>
 <pre><code>## toilets
 ##   1   2 
 ## 116 102</code></pre>
-<pre><code>Therefore, the value of the test statistic is 102 out of 218.</code></pre>
+<p>Therefore, the value of the test statistic is 102 out of 218.</p>
 <pre class="r"><code>#Finding the p-vlaue
 binom.test(x = 102, n = 218, p = 0.50, alternative = &quot;less&quot;)</code></pre>
 <pre><code>## 
@@ -201,9 +201,8 @@ binom.test(x = 102, n = 218, p = 0.50, alternative = &quot;less&quot;)</code></p
 ## sample estimates:
 ## probability of success 
 ##              0.4678899</code></pre>
-<pre><code>Thus we fail to reject the null hypothesis because 0.1893 &gt; 0.10.
-
-English Conclusion: There is no significant evidence to contradict the claim that there is at least one bathroom in 50% of the apartments in Vitoria, Spain.</code></pre>
+<p>Thus we fail to reject the null hypothesis because 0.1893 &gt; 0.10.</p>
+<p>English Conclusion: There is no significant evidence to contradict the claim that there is at least one bathroom in 50% of the apartments in Vitoria, Spain.</p>
 <ol start="2" style="list-style-type: upper-alpha">
 <li>Can the director’s claim about elevators be substantiated using an <span class="math inline">\(\alpha = 0.10\)</span>? Use both an approximate method as well as an exact method to reach a conclusion. Are the methods in agreement?</li>
 </ol>
@@ -216,7 +215,7 @@ xtabs(~elevator, data = VIT2005)</code></pre>
 <pre><code>## elevator
 ##   0   1 
 ##  44 174</code></pre>
-<pre><code>Therefore, the value of the test statistic is 174 out of out of 218.</code></pre>
+<p>Therefore, the value of the test statistic is 174 out of out of 218.</p>
 <pre class="r"><code>#Finding the p-value
 binom.test(x = 174, n = 218, p = 0.75, alternative = &quot;greater&quot;)</code></pre>
 <pre><code>## 
@@ -231,13 +230,41 @@ binom.test(x = 174, n = 218, p = 0.75, alternative = &quot;greater&quot;)</code>
 ## sample estimates:
 ## probability of success 
 ##              0.7981651</code></pre>
-<pre><code>Thus we reject the null in favor of the alternative because 0.05643 &lt; 0.10.
-
-English Conclusion: There is evidence to support the claim that at least 75% of apartments have an elevator.</code></pre>
+<p>Thus we reject the null in favor of the alternative because 0.05643 &lt; 0.10.</p>
+<p>English Conclusion: There is evidence to support the claim that at least 75% of apartments have an elevator.</p>
 <ul>
-<li>Approximate Method:</li>
+<li><p>Approximate Method:</p>
+<p><span class="math inline">\(H_0: p = 0.75\)</span> versus <span class="math inline">\(H_1: p &gt; 0.75\)</span></p></li>
 </ul>
-<p>????</p>
+<pre class="r"><code>#Without continuity correction
+prop.test(x = 174, n = 218, p = 0.75, alternative = &quot;greater&quot;, correct = FALSE)</code></pre>
+<pre><code>## 
+##  1-sample proportions test without continuity correction
+## 
+## data:  174 out of 218, null probability 0.75
+## X-squared = 2.6972, df = 1, p-value = 0.05026
+## alternative hypothesis: true p is greater than 0.75
+## 95 percent confidence interval:
+##  0.7499209 1.0000000
+## sample estimates:
+##         p 
+## 0.7981651</code></pre>
+<pre class="r"><code>#with continuity correction
+prop.test(x = 174, n = 218, p = 0.75, alternative = &quot;greater&quot;, correct = TRUE)</code></pre>
+<pre><code>## 
+##  1-sample proportions test with continuity correction
+## 
+## data:  174 out of 218, null probability 0.75
+## X-squared = 2.4465, df = 1, p-value = 0.05889
+## alternative hypothesis: true p is greater than 0.75
+## 95 percent confidence interval:
+##  0.7474708 1.0000000
+## sample estimates:
+##         p 
+## 0.7981651</code></pre>
+<p>Thus we reject the null in favor of the alternative because the p-value without continuity correction, 0.05026, or the p-value with continuity correction, 0.05889, is less than our significance level of 0.10.</p>
+<p>English Conclusion: There is evidence to support the claim that at least 75% of apartments have an elevator.</p>
+<p>Using both methods, we rejected the null in favor of the alternative so the methods are in agreement.</p>
 <ol start="3" style="list-style-type: upper-alpha">
 <li>Test whether the proportion of apartments built prior to 1980 without garages have a smaller proportion with elevators than without elevators.</li>
 </ol>
@@ -248,7 +275,7 @@ Apartments</code></pre>
 ## elevator  0  1
 ##        0 19  0
 ##        1 22  4</code></pre>
-<pre><code>Thus 19 apartments without garages did not have an elevator and 22 apartments without garages did have an elevator. There were a total of 45 apartments sampled prior to 1980.</code></pre>
+<p>Thus 19 apartments without garages did not have an elevator and 22 apartments without garages did have an elevator. There were a total of 45 apartments sampled prior to 1980.</p>
 <pre class="r"><code>fisher.test(Apartments, alternative = &quot;greater&quot;)</code></pre>
 <pre><code>## 
 ##  Fisher's Exact Test for Count Data
@@ -261,9 +288,8 @@ Apartments</code></pre>
 ## sample estimates:
 ## odds ratio 
 ##        Inf</code></pre>
-<pre><code>Therefore we fail to reject the null since 0.1003 &gt; 0.10.
-
-English Conclusion: There is no significant evidence that the proportion of apartments built prior to 1980 with elevators and no garages is lower than the proportion of apartments built prior to 1980 without elevators and no garages.</code></pre>
+<p>Therefore we fail to reject the null since 0.1003 &gt; 0.10.</p>
+<p>English Conclusion: There is no significant evidence that the proportion of apartments built prior to 1980 with elevators and no garages is lower than the proportion of apartments built prior to 1980 without elevators and no garages.</p>
 <hr />
 <p><strong>31. Cleveland (1993) suggested that the yeild recorded for the year 1932 was actually 1931’s yield and vice versa for the Morris site in the</strong> <code>barley</code> <strong>data set after examining the data using trellis graphics.</strong></p>
 <pre class="r"><code>summary(barley)</code></pre>
@@ -339,13 +365,15 @@ RR</code></pre>
 ## sample estimates:
 ## mean of x 
 ## -1.893329</code></pre>
-<pre><code>The value of the standardized test statistic is -1.1307</code></pre>
+<p>The value of the standardized test statistic is -1.1307</p>
 <ul>
-<li><p>Step 4: Statistical Conclusion</p>
-<p>Given the rejection region, we fail to reject the null because -1.1307 &lt; 1.8331. Also given the p-value, we fail to reject the null because 0.8563 &gt; 0.05</p></li>
-<li><p>Step 5: English Conclusion</p>
-<p>There is no significant evidence that shows the 1932 mean barley yield for Morris is greater than the 1932 mean barley yield for Crookston.</p></li>
+<li>Step 4: Statistical Conclusion</li>
 </ul>
+<p>Given the rejection region, we fail to reject the null because -1.1307 &lt; 1.8331. Also given the p-value, we fail to reject the null because 0.8563 &gt; 0.05</p>
+<ul>
+<li>Step 5: English Conclusion</li>
+</ul>
+<p>There is no significant evidence that shows the 1932 mean barley yield for Morris is greater than the 1932 mean barley yield for Crookston.</p>
 
 
 
