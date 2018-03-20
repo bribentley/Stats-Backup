@@ -1,0 +1,13 @@
+---
+title: "Quiz 4 Comments"
+author: "Alan T. Arnholt"
+date: "3/17/2018"
+output: 
+  bookdown::html_document2
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+* Nice Job---100!

@@ -1,0 +1,10 @@
+---
+title: "Presentation Slides"
+author: "Alan T. Arnholt"
+date: "3/18/2018"
+output: html_document
+---
+
+* In your slides you can use echo = FALSE, to hide the command for bringing in the app, to have more space for your app.
+
+* App --- Nice job!
