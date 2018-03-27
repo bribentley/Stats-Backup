@@ -164,29 +164,19 @@ ggplot(data = LOSTR, aes(y = lostrevenue, x = numbersick)) +
 X &lt;- model.matrix(mod)
 dim(X)</code></pre>
 <pre><code>## [1] 25  2</code></pre>
-<pre class="r"><code>anova(mod)</code></pre>
-<pre><code>## Analysis of Variance Table
-## 
-## Response: lostrevenue
-##            Df   Sum Sq  Mean Sq F value    Pr(&gt;F)    
-## numbersick  1 10570534 10570534  176.21 2.874e-12 ***
-## Residuals  23  1379733    59988                      
-## ---
-## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
-<pre class="r"><code>SSE &lt;- anova(mod)[2,2]
-MSE &lt;- SSE/(25-2)
-
-MSE * solve(t(X) %*% X)</code></pre>
+<pre class="r"><code>vcov(mod)</code></pre>
 <pre><code>##             (Intercept) numbersick
 ## (Intercept)  12724.0361 -741.70261
 ## numbersick    -741.7026   53.28323</code></pre>
 <ol start="4" style="list-style-type: lower-alpha">
 <li>Create a 95% confidence interval for B1.</li>
 </ol>
-<pre class="r"><code>confint(mod, level = 0.95)</code></pre>
+<pre class="r"><code>CI &lt;- confint(mod, level = 0.95)
+CI</code></pre>
 <pre><code>##                2.5 %   97.5 %
 ## (Intercept) 61.49279 528.1855
 ## numbersick  81.79671 111.9972</code></pre>
+<p>The confidence interval is <span class="math inline">\([81.7967148, 111.9971983]\)</span>.</p>
 <ol start="5" style="list-style-type: lower-alpha">
 <li>Compute the coefficient of determination and the adjusted coefficient of determination. Provide contextualual interpretations of both values.</li>
 </ol>
@@ -195,40 +185,20 @@ MSE * solve(t(X) %*% X)</code></pre>
 <pre class="r"><code>summary(mod)$adj.r.squared</code></pre>
 <pre><code>## [1] 0.8795239</code></pre>
 <p>The coefficient of determination is 0.8845 and the adjusted coefficient of determination is 0.8795.</p>
-<p>About 88 percent of the variation in the association between number of sick employees and the amount of lost revenue has been explained by the model.</p>
+<p>The coefficient of determination and adjusted coefficient of determination means that about 88.5% and 88%, respectively, of the variance in revenue lost can be explained by the change in <code>numbersick</code>.</p>
 <ol start="6" style="list-style-type: lower-alpha">
 <li>What assumptions need to be satisfied in order to use the model from part (b) for inferential purposes? If there is/are any outlier/s in the data, remove it/them prior to answering the remainder of the questions.</li>
 </ol>
-<p>We assume that their is no influential data point that affects our regression model.</p>
-<p>There is an outlier, data point 4: (11, 2500)</p>
+<p>We assume that the errors are assumed to be independent, follow a normal distribution with a mean of zero, and have constant variance.</p>
+<p>There is an outlier, data point 4: <span class="math inline">\((11, 2500)\)</span></p>
 <pre class="r"><code>library(car)
 outlierTest(mod)</code></pre>
 <pre><code>##   rstudent unadjusted p-value Bonferonni p
 ## 4 42.11082         1.5825e-22   3.9562e-21</code></pre>
 <pre class="r"><code>#Removing the outlier
-library(dplyr)</code></pre>
-<pre><code>## 
-## Attaching package: 'dplyr'</code></pre>
-<pre><code>## The following object is masked from 'package:car':
-## 
-##     recode</code></pre>
-<pre><code>## The following objects are masked from 'package:stats':
-## 
-##     filter, lag</code></pre>
-<pre><code>## The following objects are masked from 'package:base':
-## 
-##     intersect, setdiff, setequal, union</code></pre>
-<pre class="r"><code>library(tidyverse)</code></pre>
-<pre><code>## ── Attaching packages ───────────────────────────────────────────────────────────── tidyverse 1.2.1 ──</code></pre>
-<pre><code>## ✔ tibble  1.4.2     ✔ purrr   0.2.4
-## ✔ tidyr   0.8.0     ✔ stringr 1.3.0
-## ✔ readr   1.1.1     ✔ forcats 0.3.0</code></pre>
-<pre><code>## ── Conflicts ──────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
-## ✖ dplyr::filter() masks stats::filter()
-## ✖ dplyr::lag()    masks stats::lag()
-## ✖ dplyr::recode() masks car::recode()
-## ✖ purrr::some()   masks car::some()</code></pre>
-<pre class="r"><code>newdata &lt;- LOSTR %&gt;% slice(-4)
+library(dplyr)
+library(tidyverse)
+newdata &lt;- LOSTR %&gt;% slice(-4)
 newdata</code></pre>
 <pre><code>## # A tibble: 24 x 2
 ##    numbersick lostrevenue
@@ -276,14 +246,15 @@ ycep</code></pre>
 <pre class="r"><code>ExpLostRev &lt;- slope * c(5, 15, 25) + ycep
 ExpLostRev</code></pre>
 <pre><code>## [1]  703.8017 1703.7961 2703.7906</code></pre>
-<p>The expected lost revenues when 5, 15, and 25 workers are absent due to illness is 703.8016585, 1703.7961376, 2703.7906166.</p>
+<p>The expected lost revenues when 5, 15, and 25 workers are absent due to illness is 703.8016585, 1703.7961376, 2703.7906166 respectively.</p>
 <ol start="8" style="list-style-type: lower-alpha">
 <li>Compute a 95% prediction interval of lost revenues when 14 workers are absent due to illness.</li>
 </ol>
-<pre class="r"><code>confint(mod2, level = 0.95)</code></pre>
-<pre><code>##                2.5 %   97.5 %
-## (Intercept) 176.9494 230.6594
-## numbersick   98.2792 101.7197</code></pre>
+<pre class="r"><code>PI &lt;- predict(mod2, data.frame(numbersick = 14), interval = &quot;predict&quot;)
+PI</code></pre>
+<pre><code>##        fit      lwr      upr
+## 1 1603.797 1545.119 1662.474</code></pre>
+<p>The 95% prediction interval of lost revenue when 14 workers are absent due to illness is between <span class="math inline">\((1545.1189599, 1662.4744194)\)</span></p>
 
 
 

@@ -37,18 +37,17 @@ mod <- lm(lostrevenue ~ numbersick, data = LOSTR)
 X <- model.matrix(mod)
 dim(X)
 
-anova(mod)
-SSE <- anova(mod)[2,2]
-MSE <- SSE/(25-2)
-
-MSE * solve(t(X) %*% X)
+vcov(mod)
 ```
 
 d) Create a 95% confidence interval for B1.
 
 ```{r}
-confint(mod, level = 0.95)
+CI <- confint(mod, level = 0.95)
+CI
 ```
+
+The confidence interval is $[`r CI[2,1]`, `r CI[2,2]`]$.
 
 e) Compute the coefficient of determination and the adjusted coefficient of determination. Provide contextualual interpretations of both values.
 
@@ -59,20 +58,20 @@ summary(mod)$adj.r.squared
 
 The coefficient of determination is 0.8845 and the adjusted coefficient of determination is 0.8795. 
 
-About 88 percent of the variation in the association between number of sick employees and the amount of lost revenue has been explained by the model.
+The coefficient of determination and adjusted coefficient of determination means that about 88.5% and 88%, respectively, of the variance in revenue lost can be explained by the change in `numbersick`.
 
 f) What assumptions need to be satisfied in order to use the model from part (b) for inferential purposes? If there is/are any outlier/s in the data, remove it/them prior to answering the remainder of the questions.
 
-We assume that their is no influential data point that affects our regression model.
+We assume that the errors are assumed to be independent, follow a normal distribution with a mean of zero, and have constant variance.
 
-There is an outlier, data point 4: (11, 2500)
+There is an outlier, data point 4: $(11, 2500)$
 
 ```{r}
 library(car)
 outlierTest(mod)
 ```
 
-```{r}
+```{r warning = FALSE, message = FALSE}
 #Removing the outlier
 library(dplyr)
 library(tidyverse)
@@ -94,10 +93,12 @@ ExpLostRev <- slope * c(5, 15, 25) + ycep
 ExpLostRev
 ```
 
-The expected lost revenues when 5, 15, and 25 workers are absent due to illness is `r ExpLostRev `.
+The expected lost revenues when 5, 15, and 25 workers are absent due to illness is `r ExpLostRev ` respectively.
 
 h) Compute a 95% prediction interval of lost revenues when 14 workers are absent due to illness.
 ```{r}
-confint(mod2, level = 0.95)
+PI <- predict(mod2, data.frame(numbersick = 14), interval = "predict")
+PI
 ```
 
+The 95% prediction interval of lost revenue when 14 workers are absent due to illness is between $(`r PI[1,2]`, `r PI[1,3]`)$
