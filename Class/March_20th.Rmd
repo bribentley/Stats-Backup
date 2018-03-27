@@ -1,0 +1,23 @@
+---
+title: "March 20th"
+output: html_document
+---
+
+```{r}
+data <- read.table("http://ww2.amstat.org/publications/jse/datasets/fat.dat.txt", col.names = c("Case_number", "body_fat_Brozek", "body_fat_siri", "density", "age", "weight", "height", "adiposity_index", "fat_free_wgt", "neck", "chest", "abs", "hip","thigh", "knee", "ankle", "bicep", "forearm", "wrist"))
+data
+```
+
+```{r}
+plot(data$body_fat_Brozek ~ data$body_fat_siri)
+```
+
+```{r}
+library(ggplot2)
+p <- ggplot(data = data, aes(data$body_fat_Brozek, data$body_fat_siri, color = Case_number)) +
+  geom_point()+
+  theme_bw()
+library(plotly)
+ggplotly(p)
+```
+

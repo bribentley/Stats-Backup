@@ -1,0 +1,103 @@
+---
+title: "Chapter 12 Problem 2"
+author: "Bri Bentley"
+date: '`r format(Sys.time(), "%b %d, %Y")`'
+output:
+  bookdown::html_document2:
+    highlight: textmate
+    theme: yeti
+---
+
+**A metallurgic company is investigating lost revenue due to worker illness. It is interested in creating a table of lost revenue to be used for future budgets and company forecasting plans. The data are stored in the data frame** `LOSTR`.
+
+```{r}
+library(PASWR2)
+summary(LOSTR)
+head(LOSTR)
+```
+
+
+a) Create a scatterplot of lost revenue versus number of ill workers. Characterize the relationship between `lostrevenue` and `numbersick`.
+
+There is a postive correlation between `lostrevenue` and `numbersick`. There also appears that there may be a single outlier.
+
+b) Fit a regression line to the data. Superimpose the resulting line in the plot created in part (a).
+
+```{r}
+library(ggplot2)
+ggplot(data = LOSTR, aes(y = lostrevenue, x = numbersick)) +
+  geom_point() + 
+  geom_smooth(method = "lm")
+```
+
+c) Compute the covariance matrix of the B-hats.
+
+```{r}
+mod <- lm(lostrevenue ~ numbersick, data = LOSTR)
+X <- model.matrix(mod)
+dim(X)
+
+anova(mod)
+SSE <- anova(mod)[2,2]
+MSE <- SSE/(25-2)
+
+MSE * solve(t(X) %*% X)
+```
+
+d) Create a 95% confidence interval for B1.
+
+```{r}
+confint(mod, level = 0.95)
+```
+
+e) Compute the coefficient of determination and the adjusted coefficient of determination. Provide contextualual interpretations of both values.
+
+```{r}
+summary(mod)$r.squared
+summary(mod)$adj.r.squared
+```
+
+The coefficient of determination is 0.8845 and the adjusted coefficient of determination is 0.8795. 
+
+About 88 percent of the variation in the association between number of sick employees and the amount of lost revenue has been explained by the model.
+
+f) What assumptions need to be satisfied in order to use the model from part (b) for inferential purposes? If there is/are any outlier/s in the data, remove it/them prior to answering the remainder of the questions.
+
+We assume that their is no influential data point that affects our regression model.
+
+There is an outlier, data point 4: (11, 2500)
+
+```{r}
+library(car)
+outlierTest(mod)
+```
+
+```{r}
+#Removing the outlier
+library(dplyr)
+library(tidyverse)
+newdata <- LOSTR %>% slice(-4)
+newdata
+```
+
+g) Determine the expected lost revenues when 5, 15, and 25 workers are absent due to illness.
+
+```{r}
+mod2 <- lm(lostrevenue ~ numbersick, data = newdata)
+summary(mod2)
+ycep <- summary(mod2)$coefficients[1,1]
+slope <- summary(mod2)$coefficients[2,1]
+ycep
+slope
+
+ExpLostRev <- slope * c(5, 15, 25) + ycep
+ExpLostRev
+```
+
+The expected lost revenues when 5, 15, and 25 workers are absent due to illness is `r ExpLostRev `.
+
+h) Compute a 95% prediction interval of lost revenues when 14 workers are absent due to illness.
+```{r}
+confint(mod2, level = 0.95)
+```
+

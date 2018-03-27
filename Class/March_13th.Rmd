@@ -6,7 +6,7 @@ output: html_document
 ```{r}
 library(PASWR2)
 #Create a scatterplot to compare the two using a base function
-plot(x = GRADES$sat, y = GRADES$gpa)
+plot(x = GRADES$sat, y = GRADES$gpa, col = "blue")
 abline(lm(GRADES$gpa ~ GRADES$sat)) ## lm(y~x)
 ```
 
