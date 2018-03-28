@@ -101,4 +101,4 @@ PI <- predict(mod2, data.frame(numbersick = 14), interval = "predict")
 PI
 ```
 
-The 95% prediction interval of lost revenue when 14 workers are absent due to illness is between $(`r PI[1,2]`, `r PI[1,3]`)$
+The 95% prediction interval of lost revenue when 14 workers are absent due to illness is between $(`r PI[1,2]`, `r PI[1,3]`)$.
