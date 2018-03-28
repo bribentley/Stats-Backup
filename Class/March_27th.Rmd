@@ -1,0 +1,109 @@
+---
+title: "march 27th"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r warning=FALSE, message=FALSE}
+library(PASWR2)
+noco <- c(8, 9) #removing columns 8 and 9, why there is a minus sign below
+hsw <- HSWRESTLER[,-noco]
+library(caret)
+set.seed(589)
+trainIndex <- createDataPartition(y = hsw$hwfat, p = 0.75, list = FALSE, times = 1)
+train <- hsw[trainIndex,]
+test <- hsw[-trainIndex,]
+dim(train)
+dim(test)
+```
+
+**Step Method**
+
+```{r}
+fitControl <- trainControl(method = "cv", number = 5)
+set.seed(5)
+stepMod <- train(hwfat ~., data = train, method = "leapSeq", trControl = fitControl, verbose = FALSE)
+stepMod
+```
+
+```{r}
+summary(stepMod$finalModel)
+```
+
+The "*" indicate which variables are in the given model.
+
+```{r}
+coef(stepMod$finalModel, id = 2)
+```
+
+```{r}
+#how good is this 2 variable model?
+yhat <- predict(stepMod, newdata = test)
+RMSE <- sqrt(mean((test$hwfat - yhat)^2)) #Root mean square error
+RMSE
+```
+
+**Leap Forward Method**
+
+```{r}
+fitControl <- trainControl(method = "cv", number = 5)
+set.seed(1)
+fsMod <- train(hwfat ~., data = train, method = "leapForward", trControl = fitControl, verbose = FALSE)
+fsMod #"forward selection""
+summary(fsMod$finalModel)
+coef(fsMod$finalModel, id = 3)
+```
+
+```{r}
+#how good is this 2 variable model?
+yhat <- predict(fsMod, newdata = test)
+RMSE <- sqrt(mean((test$hwfat - yhat)^2)) #Root mean square error
+RMSE
+```
+
+**Leap Backward Method**
+
+```{r}
+fitControl <- trainControl(method = "cv", number = 5)
+set.seed(1)
+bwMod <- train(hwfat ~., data = train, method = "leapBackward", trControl = fitControl, verbose = FALSE)
+bwMod #"backward"
+summary(bwMod$finalModel)
+coef(bwMod$finalModel, id = 2)
+```
+
+```{r}
+yhat <- predict(bwMod, newdata = test)
+RMSE <- sqrt(mean((test$hwfat - yhat)^2)) #Root mean square error
+RMSE
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
