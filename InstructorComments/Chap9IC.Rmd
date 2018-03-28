@@ -1,0 +1,12 @@
+---
+title: "IC Chapter 9"
+author: "Alan T. Arnholt"
+date: "3/28/2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+* In problem 31, the null hypothesis for a mean difference is written $H_0:\mu_D = 0$.  The rest looks good!
