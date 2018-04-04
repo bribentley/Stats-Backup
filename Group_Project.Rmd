@@ -1,0 +1,244 @@
+---
+title: "Data Errors Group Assignment"
+author: "Stephen Graham, Bri Bentley, and Coleman Ross"
+date: "3/27/2018"
+output:
+  html_document: default
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(dplyr)
+```
+
+Directions: 
+
+1). I found 11 data entry errors, the article points out three.  See how many your group can find and document how you found them and what the values should be. 
+
+We actually found that the article points out five data entry errors. On page 3, the author notes that case 42 weighs 205 pounds but measures only 29.5 inches in height. This is inaccurate, and by using the adiposity index, they were able to conclude their height should have been 69.5 inches, a value that is only off by 1 digit. 
+
+Furthermore, the author created a table at the top of page 4 that lists 3 cases (cases 48, 76, and 96) where the listed bone density values do not give rise to the two estimates of body fat percentage recorded. The author does give the apparently correct bone density values that coordinate with the body fat percentage values. Again, each of these entries were only off by 1 digit in each case. 
+
+On the same page, the author mentions that case 182 is a particularly lean individual whose predicted percentage of body fat is negative according to Siri's and Brozek's equation and had been truncated to zero in the dataset, which is clearly an anamoly. 
+
+In addition to the errors that the author has mentioned, we found a number of cases that had apparent data entry errors as well. 
+
+
+```{r}
+data <- read.table("http://ww2.amstat.org/publications/jse/datasets/fat.dat.txt", col.names = c("Case_number", "body_fat_Brozek", "body_fat_siri", "density", "age", "weight", "height", "adiposity_index", "fat_free_wgt", "neck", "chest", "abs", "hip","thigh", "knee", "ankle", "bicep", "forearm", "wrist"))
+head(data)
+```
+```{r}
+library(ggplot2)
+p <- ggplot(data = data, aes(data$Case_number, data$height, color = Case_number)) +
+  geom_point()+
+  theme_bw()
+library(plotly)
+ggplotly(p)
+```
+
+Using the above plotly code, we plotted each of the variables against their case number to get an idea where any extreme outliers were in the midst of the data set. For example, it is easy to see that case 42 exemplifies a clear data entry error when plotting height against the case numbers because it shows that the person was only 29.5 inches in height. 
+
+
+```{r}
+library(ggplot2)
+p <- ggplot(data = data, aes(data$Case_number, data$weight, color = Case_number)) +
+  geom_point()+
+  theme_bw()
+library(plotly)
+ggplotly(p)
+```
+
+However, it is necessary to be careful. When plotting weight against case numbers (shown above), it is clear that case 39 is an outlier, weighing 363.15 pounds, but it does not appear that this is a data entry error because the adiposity index for this person is 48.9, which is reasonable for a person as overweight as the person in case 39. 
+
+```{r}
+library(ggplot2)
+p <- ggplot(data = data, aes(data$Case_number, data$ankle, color = Case_number)) +
+  geom_point()+
+  theme_bw()
+library(plotly)
+ggplotly(p)
+```
+It also appears that cases 31 and 86 have data entry errors in the ankle variable. These people have ankle measurements that far exceed the heaviest person in the data set (case 39), and they are extreme outliers compared to the rest of the data. It is also quite probable that case 74's ankle measurement was entered improperly because it is far below the rest of the measurements. 
+
+```{r}
+data
+```
+
+Another way to go about this would be to check the various computed values against the actual computations. In this process, it would be necessary to compare the entered values with the computed values on a plotly graph like this, then see which values match up exactly (with neither rounding error, nor data entry error), find which values match up very closely within a specific tolerance (indicating a rounding error as opposed to a data entry error), and find which values do not match up closely and fall outside a reasonable tolerance (indicating a data entry error). This would be a reasonable way to go about this process of finding data entry errors as well. 
+
+
+
+
+
+
+
+
+2). How many rounding errors are in the original data set?  I found just under 300.  Document where the rounding errors occur (variables, how many, etc.). 
+
+**Adiposity Index Comparison**
+```{r}
+#Here we compute and round (to the nearest tenth) the adiposity for each case by converting the weights from pounds to kilograms and the heights from inches to meters, then we divide the converted weight by the square of the converted height to compare these computed adiposity numbers to the listed adiposity numbers.
+computed_and_rounded_adiposity <- round((data$weight/2.20462)/((data$height/39.3701)^2), digits=1)
+
+#Here we create a new data set using the mutate function from the dplyr package to include a new column with our computed adiposity values. 
+newdata <- data %>%
+  mutate(computed_and_rounded_adiposity = computed_and_rounded_adiposity)
+  head(newdata)
+
+#Here we take a subset of this data frame to simplify the data of interest to only include case numbers, the given adiposity values, and our newly computed and rounded adiposity values.
+adiposity_comparison <- subset(newdata, select = c(Case_number, adiposity_index, computed_and_rounded_adiposity))
+head(adiposity_comparison)
+
+#Instead of counting all of the cases where the given adiposity numbers do not match our computed and rounded adiposity numbers, we will subset this data frame to only include entries where there is indeed a difference between the given adiposity values and the computed and rounded adiposity values. 
+adiposity_rounding_errors <- subset(adiposity_comparison, adiposity_index != computed_and_rounded_adiposity)
+
+head(adiposity_rounding_errors)
+
+#Lastly, we will count how many cases exist that have improperly rounded adiposity numbers by asking for how many rows exist in this final data frame. 
+nrow(adiposity_rounding_errors)
+
+#There are 99 cases where the researchers improperly rounded when computing the adiposity numbers in their data set.
+```
+
+
+
+**Plot of Adiposity Given Values vs Adiposity Computed Values**
+```{r}
+library(ggplot2)
+p <- ggplot(data = data, aes(newdata$adiposity_index, newdata$computed_and_rounded_adiposity, color = Case_number)) +
+  geom_point()+
+  labs(x="adiposity", y="computed adiposity")
+  theme_bw()
+library(plotly)
+ggplotly(p)
+```
+
+
+
+
+**STILL NEED TO DO Brozek Comparison**
+```{r}
+#Here we compute and round (to the nearest tenth) the adiposity for each case by converting the weights from pounds to kilograms and the heights from inches to meters, then we divide the converted weight by the square of the converted height to compare these computed adiposity numbers to the listed adiposity numbers.
+computed_and_rounded_adiposity <- round((data$weight/2.20462)/((data$height/39.3701)^2), digits=1)
+
+#Here we create a new data set using the mutate function from the dplyr package to include a new column with our computed adiposity values. 
+newdata <- data %>%
+  mutate(computed_and_rounded_adiposity = computed_and_rounded_adiposity)
+  head(newdata)
+
+#Here we take a subset of this data frame to simplify the data of interest to only include case numbers, the given adiposity values, and our newly computed and rounded adiposity values.
+adiposity_comparison <- subset(newdata, select = c(Case_number, adiposity_index, computed_and_rounded_adiposity))
+head(adiposity_comparison)
+
+#Instead of counting all of the cases where the given adiposity numbers do not match our computed and rounded adiposity numbers, we will subset this data frame to only include entries where there is indeed a difference between the given adiposity values and the computed and rounded adiposity values. 
+adiposity_rounding_errors <- subset(adiposity_comparison, adiposity_index != computed_and_rounded_adiposity)
+
+head(adiposity_rounding_errors)
+
+#Lastly, we will count how many cases exist that have improperly rounded adiposity numbers by asking for how many rows exist in this final data frame. 
+nrow(adiposity_rounding_errors)
+
+#There are 99 cases where the researchers improperly rounded when computing the adiposity numbers in their data set.
+```
+
+
+**STILL NEED TO DO Plot of Brozek Given Values vs Brozek Computed Values**
+```{r}
+library(ggplot2)
+p <- ggplot(data = data, aes(newdata$adiposity_index, newdata$computed_and_rounded_adiposity, color = Case_number)) +
+  geom_point()+
+  labs(x="adiposity", y="computed adiposity")
+  theme_bw()
+library(plotly)
+ggplotly(p)
+```
+
+
+
+**Siri Comparison**
+```{r}
+#Here we compute and round (to the nearest tenth) the adiposity for each case by converting the weights from pounds to kilograms and the heights from inches to meters, then we divide the converted weight by the square of the converted height to compare these computed adiposity numbers to the listed adiposity numbers.
+computed_and_rounded_siri <- round((495/data$density)-450, digits=1)
+
+#Here we create a new data set using the mutate function from the dplyr package to include a new column with our computed adiposity values. 
+newdata3 <- data %>%
+  mutate(computed_and_rounded_siri = computed_and_rounded_siri)
+  head(newdata3)
+
+#Here we take a subset of this data frame to simplify the data of interest to only include case numbers, the given adiposity values, and our newly computed and rounded adiposity values.
+siri_comparison <- subset(newdata3, select = c(Case_number, body_fat_siri, computed_and_rounded_siri))
+head(siri_comparison)
+
+#Instead of counting all of the cases where the given adiposity numbers do not match our computed and rounded adiposity numbers, we will subset this data frame to only include entries where there is indeed a difference between the given adiposity values and the computed and rounded adiposity values. 
+siri_rounding_errors <- subset(siri_comparison, body_fat_siri != computed_and_rounded_siri)
+
+head(siri_rounding_errors)
+
+#Lastly, we will count how many cases exist that have improperly rounded adiposity numbers by asking for how many rows exist in this final data frame. 
+nrow(siri_rounding_errors)
+
+#There are 36 cases where the researchers improperly rounded when computing the adiposity numbers in their data set.
+```
+
+
+**Plot of Siri Given Values vs Siri Computed Values**
+```{r warning=FALSE, message = FALSE}
+library(ggplot2)
+p <- ggplot(data = data, aes(newdata3$body_fat_siri, newdata3$computed_and_rounded_siri, color = Case_number)) +
+  geom_point()+
+  labs(x="Siri", y="computed Siri")
+  theme_bw()
+library(plotly)
+ggplotly(p)
+```
+
+
+
+**Fat Free Weight Comparison**
+```{r}
+#Here we compute and round (to the nearest tenth) the adiposity for each case by converting the weights from pounds to kilograms and the heights from inches to meters, then we divide the converted weight by the square of the converted height to compare these computed adiposity numbers to the listed adiposity numbers.
+computed_and_rounded_ffw <- round((1-(data$body_fat_Brozek/100))*data$weight, digits=1)
+
+#Here we create a new data set using the mutate function from the dplyr package to include a new column with our computed adiposity values. 
+newdata4 <- data %>%
+  mutate(computed_and_rounded_ffw = computed_and_rounded_ffw)
+  head(newdata4)
+
+#Here we take a subset of this data frame to simplify the data of interest to only include case numbers, the given adiposity values, and our newly computed and rounded adiposity values.
+ffw_comparison <- subset(newdata4, select = c(Case_number, fat_free_wgt, computed_and_rounded_ffw))
+head(ffw_comparison)
+
+#Instead of counting all of the cases where the given adiposity numbers do not match our computed and rounded adiposity numbers, we will subset this data frame to only include entries where there is indeed a difference between the given adiposity values and the computed and rounded adiposity values. 
+ffw_rounding_errors <- subset(ffw_comparison, fat_free_wgt != computed_and_rounded_ffw)
+
+head(ffw_rounding_errors)
+
+#Lastly, we will count how many cases exist that have improperly rounded adiposity numbers by asking for how many rows exist in this final data frame. 
+nrow(ffw_rounding_errors)
+
+#There are 124 cases where the researchers improperly rounded when computing the adiposity numbers in their data set.
+```
+
+
+**Plot of Fat Free Weight Values vs Fat Free Weight Computed Values** 
+```{r}
+library(ggplot2)
+p <- ggplot(data = data, aes(newdata4$fat_free_wgt, newdata4$computed_and_rounded_ffw, color = Case_number)) +
+  geom_point()+
+  labs(x="ffw", y="computed ffw")
+  theme_bw()
+library(plotly)
+ggplotly(p)
+```
+
+With the above code, we found 99 rounding errors in the `adiposity_index variable`. The rounding errors occur in each case of the above data frame named `adiposity_rounding_errors`. 
+
+We could pretty easily modify the above code to find how many rounding errors there are in each of the other variables that are computed from various measurements. That is, it wouldn't be too hard to find the cases with rounding errors for the variables `Percent body fat using Brozek's equation`, `Percent body fat using Siri's equation`, and `Fat Free Weight`. 
+
+
+
+3). Why do you suppose there are so many errors?---Note: there is no correct answer to this question.   I am just interested in what you think may have caused the rounding errors. 
+
+We really think that there are so many errors in this data set because there was some poor graduate student who had to first enter all of the data, which is not an easy task to do with 100% accuracy. Secondly, this poor graduate student would of had to do a number of calculations, unit conversions, and computations to get the values for the various variables that were based on measured quantities. That is a lot of number crunching, and it would be very easy to mistype a digit or two with such a lengthy mundane task. It certainly wouldn't help their situation if they were doing this work on a laptop without a full keyboard or number pad like most desktop computers have. Lastly, there could be some rounding errors that come from premature truncation of computed values which would propogate the rounding error throughout the various computations. All of these thoughts are just hypotheses that stem from our perceptions of how the data set came to be. 
