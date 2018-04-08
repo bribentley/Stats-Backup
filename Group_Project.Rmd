@@ -29,6 +29,8 @@ In addition to the errors that the author has mentioned, we found a number of ca
 data <- read.table("http://ww2.amstat.org/publications/jse/datasets/fat.dat.txt", col.names = c("Case_number", "body_fat_Brozek", "body_fat_siri", "density", "age", "weight", "height", "adiposity_index", "fat_free_wgt", "neck", "chest", "abs", "hip","thigh", "knee", "ankle", "bicep", "forearm", "wrist"))
 head(data)
 ```
+throw out case #, density, siri (if only training bro), fat free, adiposity
+
 ```{r}
 library(ggplot2)
 p <- ggplot(data = data, aes(data$Case_number, data$height, color = Case_number)) +
@@ -242,3 +244,86 @@ We could pretty easily modify the above code to find how many rounding errors th
 3). Why do you suppose there are so many errors?---Note: there is no correct answer to this question.   I am just interested in what you think may have caused the rounding errors. 
 
 We really think that there are so many errors in this data set because there was some poor graduate student who had to first enter all of the data, which is not an easy task to do with 100% accuracy. Secondly, this poor graduate student would of had to do a number of calculations, unit conversions, and computations to get the values for the various variables that were based on measured quantities. That is a lot of number crunching, and it would be very easy to mistype a digit or two with such a lengthy mundane task. It certainly wouldn't help their situation if they were doing this work on a laptop without a full keyboard or number pad like most desktop computers have. Lastly, there could be some rounding errors that come from premature truncation of computed values which would propogate the rounding error throughout the various computations. All of these thoughts are just hypotheses that stem from our perceptions of how the data set came to be. 
+
+
+*****NEW STUF*******
+
+```{r}
+library(PASWR2)
+# iffy <- c(22, 27, 32, 35, 60)
+noco <- c(8, 9)
+# hsw <- HSWRESTLER[-iffy, -noco]
+hsw <- HSWRESTLER[,-noco]
+library(caret)
+set.seed(589)
+trainIndex <- createDataPartition(y = hsw$hwfat,
+                              p = 0.75,
+                              list = FALSE,
+                              times = 1
+                              )
+train <- hsw[trainIndex, ]
+test <- hsw[-trainIndex, ]
+dim(train)
+```
+
+```{r}
+fitControl <- trainControl(## 5-fold CV
+                           method = "cv",
+                           number = 5
+                           )
+set.seed(5)
+stepMod <- train(hwfat ~ ., data = train, 
+                 method = "leapSeq", 
+                 trControl = fitControl,
+                 verbose = FALSE)
+stepMod
+summary(stepMod$finalModel)
+
+yhat <- predict(stepMod, newdata = test)
+RMSE <- sqrt(mean((test$hwfat - yhat)^2))
+RMSE
+```
+
+```{r}
+fitControl <- trainControl(## 5-fold CV
+                           method = "cv",
+                           number = 5
+                           )
+set.seed(1)
+fsMod <- train(hwfat ~ ., data = train, 
+                 method = "leapForward", 
+                 trControl = fitControl,
+                 verbose = FALSE)
+fsMod
+summary(fsMod$finalModel)
+
+yhat <- predict(fsMod, newdata = test)
+RMSE <- sqrt(mean((test$hwfat - yhat)^2))
+RMSE
+```
+
+```{r}
+fitControl <- trainControl(## 5-fold CV
+                           method = "cv",
+                           number = 5
+                           )
+set.seed(7)
+beMod <- train(hwfat ~ ., data = train, 
+                 method = "leapBackward", 
+                 trControl = fitControl,
+                 verbose = FALSE)
+beMod
+summary(beMod$finalModel)
+
+yhat <- predict(beMod, newdata = test)
+RMSE <- sqrt(mean((test$hwfat - yhat)^2))
+RMSE
+```
+
+
+
+
+
+
+
+
