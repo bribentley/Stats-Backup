@@ -1,0 +1,17 @@
+---
+title: "Power App Presentation"
+output: ioslides_presentation
+---
+
+## First try at a Power App
+
+```{r, echo=FALSE}
+#In your slides you can use echo = FALSE, to hide the command for bringing in the app, to have more space for your app.
+knitr::include_app("https://bribentley.shinyapps.io/shiny/")
+```
+
+## Second try at a Power App
+
+```{r, echo=FALSE}
+knitr::include_app("https://bribentley.shinyapps.io/power2_app/")
+```

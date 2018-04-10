@@ -1,0 +1,594 @@
+---
+title: "Introduction To R using [R Markdown](http://rmarkdown.rstudio.com/) and [bookdown](https://bookdown.org/yihui/bookdown/)"
+author: "Bri Bentley"
+date: '`r format(Sys.time(), "%b %d, %Y")`'
+bibliography: PackagesUsed.bib
+output: 
+  bookdown::html_document2: 
+    highlight: textmate
+    theme: yeti
+---
+
+```{r, label = "SETUP", echo = FALSE, results= 'hide', message = FALSE, warning = FALSE}
+knitr::opts_chunk$set(comment = NA, fig.align = 'center', fig.height = 5, fig.width = 5, prompt = FALSE, highlight = TRUE, tidy = FALSE, warning = FALSE, message = FALSE)
+```
+
+**Directions:** Create a directory inside your team repository named `labs`. Recreate this document. Name your `*.Rmd` file  `Intro.Rmd` and store the file inside the `labs` directory. See Section [4](#sec4) for how to set up your YAML. Make sure to commit and push both your `Intro.Rmd` and resulting `Intro.html` files to GitHub. For more information on `knitr` (Xie 2017b) code chunk options, see [https://yihui.name/knitr/options/](https://yihui.name/knitr/options/). Refer to [https://bookdown.org/yihui/bookdown/](https://bookdown.org/yihui/bookdown/) for information on labeling and referencing footnotes, sections, tables, equations, and figures. Use the following global options for your document:
+
+````markdown
+`r ''````{r, label = "SETUP", echo = FALSE, results= 'hide', message = FALSE, warning = FALSE}
+knitr::opts_chunk$set(comment = NA, fig.align = 'center', fig.height = 5, fig.width = 5, prompt = TRUE, highlight = TRUE, tidy = FALSE, warning = FALSE, message = FALSE)
+```
+````
+
+# Lab [^1]
+
+## Basic Commands {#sec1}
+
+`R` uses functions to perform operations. To run a function called `funcname`, we type `funcname(input1, input2)`, where the inputs (or arguments) `input1` argument and `input2` tell `R` how to run the function. A function can have any number of inputs. For example, to create a vector of numbers, we use the function `c()` (for concatenate). Any numbers inside the parentheses are joined together. The following command instructs `R` to join together the numbers 1, 3, 2, and 5, and to save them as a vector named `x`. When we type `x`, it gives us back the vector.
+
+```{r}
+x <- c(1, 3, 2, 5)
+x
+```
+
+Note that the `>` is not part of the command; rather, it is printed by `R` to indicate that it is ready for another command to be entered. We can also save things using `=` rather than `<-`:
+
+```{r}
+x = c(1, 6, 2)
+x
+```
+
+```{r}
+y = c(1, 4, 3)
+y
+```
+
+Hitting the *up* arrow multiple times will display the previous commands, which can then be edited. This is useful since one often wishes to repeat a similar command. In addition, typing `?funcname` will always cause `R` to open a new help file window with additional information about the function `funcname`.
+
+We can tell `R` to add two sets of numbers together. It will then add the first number from `x` to the first number from `y`, and so on. However, `x` and `y` should be the same length. We can check their length using the `length()` function.
+
+```{r}
+length(x)
+```
+
+```{r}
+length(y)
+```
+
+```{r}
+x + y
+```
+
+The `ls()` function allows us to look at a list of all of the objects, such as data and functions, that we have saved so far. The `rm()` function can be used to delete any that we don’t want.
+
+```{r}
+ls()
+```
+
+```{r}
+rm(x, y)
+ls()
+```
+
+It is also possible to remove all objects at one:
+
+```{r}
+rm(list = ls())
+```
+
+The `matrix()` function can be used to create a matrix of numbers. Before we use the `matrix()` function, we can learn more about it:
+
+```{r}
+?matrix
+```
+
+The help file reveals that the `matrix()` function takes a number of inputs, but for now we focus on the first three: the data (the entries in the matrix), the number of rows, and the number of columns. First, we create a simple matrix.
+
+```{r}
+x <- matrix(data = c(1, 2, 3, 4), nrow = 2, ncol = 2)
+x
+```
+
+Note that we could just as well omit typing `data =`, `nrow =`, and `ncol =` in the `matrix()` command above: that is, we could just type
+
+```{r}
+x <- matrix(c(1, 2, 3, 4), 2, 2)
+```
+
+and this would have the same effect. However, it can sometimes be useful to specify the names of the arguments passed in, since otherwise `R` will assume that the function arguments are passed into the function in the same order that is given in the function’s help file. As this example illustrates, by default `R` creates matrices by successively filling in columns. Alternatively, the `byrow = TRUE` option can be used to populate the matrix in order of the rows.
+
+```{r}
+matrix(c(1, 2, 3, 4), 2, 2, byrow = TRUE)
+```
+
+Notice that in the above command we did not assign the matrix to a value such as `x`. In this case the matrix is printed to the screen but is not saved for future calculations. The `sqrt()` function returns the square root of each element of a vector or matrix. The command `x^2` raises each element of x to the power 2; any powers are possible, including fractional or negative powers.
+
+```{r}
+sqrt(x)
+```
+
+```{r}
+x^2
+```
+
+The `rnorm()` function generates a vector of random normal variables, with first argument `n` the sample size. Each time we call this function, we will get a different answer. Here we create two correlated sets of numbers, `x` and `y`, and use the `cor()` function to compute the correlation between them.
+
+```{r}
+x = rnorm(50)
+y = x + rnorm(50, mean = 50, sd = 0.1)
+cor(x, y)
+```
+
+By default, `rnorm()` creates standard normal random variables with a mean of 0 and a standard deviation of 1. However, the mean and standard deviation can be altered using the mean and sd arguments, as illustrated above. Sometimes we want our code to reproduce the exact same set of random numbers; we can use the `set.seed()` function to do this. The `set.seed()` function takes an (arbitrary) integer argument.
+
+```{r}
+set.seed(1303)
+rnorm(50)
+```
+
+We use `set.seed()` throughout the labs whenever we perform calculations involving random quantities. In general this should allow the user to reproduce our results. However, it should be noted that as new versions of `R` become available it is possible that some small discrepancies may form between the book and the output from `R`.
+
+The `mean()` and `var()` functions can be used to compute the mean and variance of a vector of numbers. Applying `sqrt()` to the output of `var()` will give the standard deviation. Or we can simply use the `sd()` function.
+
+```{r}
+set.seed(3)
+y <- rnorm(100)
+mean(y)
+```
+
+```{r}
+var(y)
+```
+
+```{r}
+sqrt(var(y))
+```
+
+```{r}
+sd(y)
+```
+
+## Graphics
+
+The `plot()` function is the primary way to plot data in `R`. For instance, `plot(x, y)` produces a scatterplot of the numbers in `x` versus the numbers in `y`. There are many additional options that can be passed in to the `plot()` function. For example, passing in the argument `xlab` will result in a label on the x-axis. To find out more information about the `plot()` function, type `?plot`.
+
+```{r}
+x <- rnorm(100)
+y <- rnorm(100)
+plot(x, y)
+```
+
+```{r}
+plot(x, y, xlab = "this is the x-axis", ylab = "this is the y-axis", main = "Plot of X vs Y")
+```
+
+We will often want to save the output of an `R` plot. The command that we use to do this will depend on the file type that we would like to create. For instance, to create a jpeg, we use the `jpeg()` function, and to create a pdf, we use the `pdf()` function.
+
+```{r}
+jpeg(file= "./JPG/YourFileName.jpeg")
+plot(x, y, col = "green")
+dev.off()
+```
+
+To display the saved file as shown in Figure \@ref(fig:fig1), use the `include_graphics()` function from `knitr`. [^2]
+
+<center>
+```{r,, label = "fig1", echo = FALSE, fig.cap="Using `knitr::include_graphics()`"}
+knitr::include_graphics('JPG/YourFileName.jpeg', dpi = 96)
+```
+</center>
+
+The function `dev.off()` indicates to `R` that we are done creating the plot. Alternatively, we can simply copy the plot window and paste it into an appropriate file type, such as a Word document.
+
+The function `seq()` can be used to create a sequence of numbers. For instance, `seq(a, b)` makes a vector of integers between `a` and `b`. There are many other options: for instance, `seq(0, 1, length = 10)` makes a sequence of 10 numbers that are equally spaced between 0 and 1. Typing `3:11` is a shorthand for `seq(3, 11)` for integer arguments.
+
+```{r}
+x <- seq(1, 10)
+x
+```
+
+```{r}
+x <- 1:10
+x
+```
+
+```{r}
+x = seq(-pi, pi, length = 50)
+```
+
+We will now create some more sophisticated plots. The `contour()` function produces a contour plot in order to represent three-dimensional data; it is like a topographical map. It takes three arguments:
+
+1. A vector of the x values (the first dimension),
+2. A vector of the y values (the second dimension), and
+3. A matrix whose elements correspond to the z value (the third dimension) for each pair of (x, y) coordinates.
+
+As with the `plot()` function, there are many other inputs that can be used to fine-tune the output of the `contour()` function. To learn more about these, take a look at the help file by typing `?contour`.
+
+```{r}
+y <- x
+f <- outer(x, y, function(x, y){
+  cos(y) / (1 + x^2)
+})
+contour(x, y, f)
+contour(x, y, f, nlevels = 45, add = TRUE)
+```
+
+```{r}
+fa <- (f -t(f))/2
+contour(x, y, fa, nlevels = 15)
+```
+
+The `image()` function works the same way as `contour()`, except that it produces a color-coded plot whose colors depend on the `z` value. This is known as a heatmap, and is sometimes used to plot temperature in weather forecasts. Alternatively, `persp()` can be used to produce a three-dimensional plot. The arguments `theta` and `phi` control the angles at which the plot is `persp()` viewed.
+
+```{r}
+image(x, y, fa)
+```
+
+```{r}
+persp(x, y, fa)
+```
+
+```{r}
+persp(x, y, fa, theta = 30)
+```
+
+```{r}
+persp(x, y, fa, theta = 30, phi = 20)
+```
+
+```{r}
+persp(x, y, fa, theta = 30, phi = 70)
+```
+
+```{r}
+persp(x, y, fa, theta = 30, phi = 40)
+```
+
+## Indexing
+
+We often wish to examine part of a set of data. Suppose that our data is stored in the matrix `A`.
+
+```{r}
+A <- matrix(1:16, 4, 4)
+A
+```
+
+Then, typing
+
+```{r}
+A[2, 3]
+```
+
+will select the element corresponding to the second row and the third column. The first number after the open-bracket symbol `[` always refers to the row, and the second number always refers to the column. We can also select multiple rows and columns at a time, by providing vectors as the indices.
+
+```{r}
+A[c(1, 3), c(2, 4)]
+```
+
+```{r}
+A[1:3, 2:4]
+```
+
+```{r}
+A[1:2, ]
+```
+
+```{r}
+A[, 1:2]
+```
+
+The last two examples include either no index for the columns or no index for the rows. These indicate that `R` should include all columns or all rows, respectively. `R` treats a single row or column of a matrix as a vector.
+
+```{r}
+A[1, ]
+```
+
+The use of a negative sign `-` in the index tells `R` to keep all rows or columns except those indicated in the index.
+
+```{r}
+A[-c(1, 3), ]
+```
+
+The `dim()` function outputs the number of rows followed by the number of columns of a given matrix.
+
+```{r}
+dim(A)
+```
+
+## Loading Data
+
+For most analyses, the first step involves importing a data set into `R`. The `read.table()` function is one of the primary ways to do this. The help file contains details about how to use this function. We can use the function `write.table()` to export data. Before attempting to load a data set, we must make sure that `R` knows to search for the data in the proper directory. For example on a Windows system one could select the directory using the `Change dir. . .` option under the File menu. However, the details of how to do this depend on the operating system (e.g. Windows, Mac, Unix) that is being used, and so we do not give further details here. We begin by loading in the `Auto` data set. This data is part of the ISLR library (we discuss libraries in Chapter 3) but to illustrate the `read.table()` function we load it now from a text file. The following command will load the `Auto.data` file into `R` and store it as an object called `Auto`, in a format referred to as a data frame. (The text file can be obtained from this book’s website.)
+
+```{r}
+site <- "http://www-bcf.usc.edu/~gareth/ISL/Auto.data"
+Auto <- read.table(file = site)
+head(Auto)
+```
+
+Note that `Auto.data` is simply a text file, which you could alternatively open on your computer using a standard text editor. It is often a good idea to view a data set using a text editor or other software such as Excel before loading it into `R`. This particular data set has not been loaded correctly, because `R` has assumed that the variable names are part of the data and so has included them in the first row. The data set also includes a number of missing observations, indicated by a question mark `?`. Missing values are a common occurrence in real data sets. Using the option `header = TRUE` in the `read.table()` function tells `R` that the first line of the file contains the variable names, and using the option `na.strings` tells `R` that any time it sees a particular character or set of characters (such as a question mark), it should be treated as a missing element of the data matrix.
+
+```{r}
+Auto <- read.table(file = site, header = TRUE, sep = "", na.strings = "?")
+head(Auto)
+```
+
+```{r}
+library(DT)
+datatable(Auto)
+```
+
+Excel is a common-format data storage program. An easy way to load such data into `R` is to save it as a csv (comma separated value) file and then use the `read.csv()` function to load it in.
+
+```{r}
+site <- "http://www-bcf.usc.edu/~gareth/ISL/Auto.csv"
+Auto1 <- read.csv(file = site, na.strings = "?")
+dim(Auto1)
+```
+
+```{r}
+datatable(Auto1, rownames = FALSE, class = 'cell-border stripe', colnames = c('cyl' = 'cylinders', 'disp' = 'displacement', 'hp' = 'horsepower', 'accel' = 'acceleration'))
+```
+
+The `dim()` function tells us that the data has 397 observations, or rows, and 9 variables, or columns. There are various ways to deal with the missing data. In this case, only five of the rows contain missing observations, and so we choose to use the `na.omit()` function to simply remove these rows.
+
+```{r}
+Auto2 <- na.omit(Auto1)
+dim(Auto2)
+```
+
+Once the data are loaded correctly, we can use `names()` to check the variable names.
+
+```{r}
+names(Auto2)
+```
+
+## Additional Graphical and Numerical Summaries
+
+We can use the `plot()` function to produce scatterplots of the quantitative variables. However, simply typing the variable names will produce an error message, because `R` does not know to look in the Auto data set for those variables. To refer to a variable, we must type the data set and the variable name joined with a `$` symbol.
+
+```{r}
+plot(Auto2$cylinders, Auto2$mpg)
+```
+
+```{r}
+plot(mpg ~ cylinders, data = Auto2)
+```
+
+```{r}
+with(data = Auto2,
+     plot(cylinders, mpg)
+     )
+```
+
+The cylinders variable is stored as a numeric vector, so `R` has treated it as quantitative. However, since there are only a small number of possible values for `cylinders`, one may prefer to treat it as a qualitative variable. The `as.factor()` function converts quantitative variables into qualitative variables.
+
+```{r}
+Auto2$cylinders <- as.factor(Auto2$cylinders)
+```
+
+If the variable plotted on the *x*-axis is categorial, then boxplots will automatically be produced by the `plot()` function. As usual, a number of options can be specified in order to customize the plots.
+
+```{r}
+plot(Auto2$cylinders, Auto2$mpg)
+```
+
+```{r}
+plot(mpg ~ cylinders, data = Auto2)
+```
+
+```{r}
+plot(mpg ~ cylinders, data = Auto2, col = "red")
+```
+
+```{r}
+plot(mpg ~ cylinders, data = Auto2, col = "red", varwidth = TRUE)
+```
+
+```{r}
+plot(mpg ~ cylinders, data = Auto2, col = "red", varwidth = TRUE,
+     horizontal = TRUE)
+```
+
+```{r}
+plot(mpg ~ cylinders, data = Auto2, col = "red", varwidth = TRUE,
+     horizontal = TRUE, xlab = "cylinders", ylab = "MPG")
+```
+
+The `hist()` function can be used to plot a histogram. Note that `col = 2` has the same effect as `col = "red"`.
+
+```{r}
+hist(Auto2$mpg, col = "red", xlab = "MPG", main = "Your Title Here")
+```
+
+```{r}
+hist(Auto2$mpg, col = "red", xlab = "MPG", main = "Your Title Here", breaks = 15)
+```
+
+# Creating boxplots and histograms with `ggplot2`
+
+See the `geom_boxplot` [documentation](http://ggplot2.tidyverse.org/reference/geom_boxplot.html) and the `geom_freqpoly` [documentation](http://ggplot2.tidyverse.org/reference/geom_histogram.html) for more details.
+
+```{r}
+library(ggplot2)
+p <- ggplot(data = Auto2, aes(x = cylinders, y = mpg))
+p +  geom_boxplot()
+```
+
+```{r}
+p +  geom_boxplot() +
+  coord_flip()
+```
+
+```{r}
+p +  geom_boxplot() +
+  coord_flip() +
+  theme_bw()
+```
+
+```{r}
+p +  geom_boxplot(fill = "red") +
+  coord_flip() +
+  theme_bw()
+```
+
+```{r}
+p +  geom_boxplot(fill = "red") +
+  coord_flip() + theme_bw() +
+  labs(x = "Cylinders", y = "MPG")
+```
+
+```{r}
+p +  geom_boxplot(fill = "red", varwidth = TRUE) +
+  coord_flip() +
+  theme_bw() +
+  labs(x = "Cylinders", y = "MPG")
+```
+
+```{r}
+p <- ggplot(data = Auto2, aes(x = mpg))
+p + geom_histogram()
+```
+
+```{r}
+p + geom_histogram(binwidth = 5)
+```
+
+```{r}
+p + geom_histogram(binwidth = 5, fill = "blue")
+```
+
+```{r}
+p + geom_histogram(binwidth = 5, fill = "blue", color = "black")
+```
+
+```{r}
+p + geom_histogram(binwidth = 5, fill = "blue", color = "black") +
+  theme_bw()
+```
+
+```{r}
+p + geom_histogram(binwidth = 5, fill = "blue", color = "black", aes(y = ..density..)) + theme_bw()
+```
+
+## Creating boxplots and histograms with `ggvis`
+
+```{r}
+library(ggvis)
+Auto2 %>%
+  ggvis(x = ~cylinders, y = ~mpg) %>%
+  layer_boxplots(fill := "red")
+```
+
+```{r}
+Auto2 %>%
+  ggvis(x = ~mpg) %>%
+  layer_histograms(fill := "lightblue", width = 1)
+```
+
+```{r}
+Auto2 %>%
+  ggvis(x = ~mpg) %>%
+  layer_histograms(fill := "pink", width = 5) %>%
+  add_axis("x", title = "Miles Per Gallon")
+```
+
+## Using `ploty`
+
+```{r}
+library(plotly)
+p1 <- ggplot(data = Auto2, aes(x = cylinders, y = mpg)) +
+  geom_boxplot(fill = "red", varwidth = TRUE) +
+  coord_flip() +
+  theme_bw() +
+  labs(x = "Cylinders", y = "MPG")
+p2 <- ggplotly(p1)
+p2
+```
+
+```{r}
+p3 <- ggplot(data = Auto2, aes(x = mpg)) +
+  geom_histogram(binwidth = 5, fill = "blue", color = "black") +
+  theme_bw()
+p4 <- ggplotly(p3)
+p4
+```
+
+The `summary()` function produces a numerical summary of each variable in a particular data set.
+
+```{r}
+summary(Auto2)
+```
+
+For qualitative variables such as `name`, `R` will list the number of observations that fall in each category. We can also produce a summary of just a single variable.
+
+```{r}
+summary(Auto2$mpg)
+```
+
+# Aggregating with `dplyr`
+
+Consider producing summary statistics for the variable `mpg` when it is grouped by `cylinders`.
+
+```{r}
+library(dplyr)
+Auto2 %>%
+  group_by(cylinders) %>%
+  summarize(median(mpg), IQR(mpg), n())
+```
+
+# Automatic Generation of `R` Package References {#sec4}
+
+Suppose the following `R` packages are used for a project: `DT`, `ggplot2`, `ISLR`,  `knitr`, `plotly`, `dplyr`, `rmarkdown`, and `bookdown`.
+
+1. Create an object named `PackagesUsed`.
+2. Write the packages used to a `*.bib` file.
+3. Load the packages with `lapply()`.[^3]
+4. Add a `bibliography` entry to the YAML.
+5. Cite the package using `@R-packagename` (look at the `*.bib` file for the exact name)
+6. Add a `References` section header (`## References`) at the very end of the document. The references will appear (provided they are cited) after the header.
+
+```markdown
+PackagesUsed <- c("DT", "ggplot2", "ISLR", "knitr", "plotly", "dplyr", "rmarkdown", "bookdown")
+# Write bib information
+knitr::write_bib(PackagesUsed, file = "./PackagesUsed.bib")
+# Load packages
+lapply(PackagesUsed, library, character.only = TRUE)
+```
+
+Example YAML:
+
+```markdown
+---
+title: "Introduction To R using [R Markdown](http://rmarkdown.rstudio.com/) and [bookdown](https://bookdown.org/yihui/bookdown/)"
+author: "Your Name"
+date: '`r format(Sys.time(), "%b %d, %Y")`'
+bibliography: PackagesUsed.bib
+output: 
+  bookdown::html_document2: 
+    highlight: textmate
+    theme: yeti
+---    
+```
+
+This document uses `DT` by @R-DT, `ggplot2` by @R-ggplot2, `ISLR` by @R-ISLR, `plotly` by @R-plotly, `rmarkdown` by @R-rmarkdown, `dplyr` by @R-dplyr, `knitr` by @R-knitr, and `bookdown` by @R-bookdown. [^4]
+
+The previous line with citations was created using:
+
+```markdown
+This document uses `DT` by @R-DT, `ggplot2` by @R-ggplot2, `ISLR` by @R-ISLR, `plotly` by @R-plotly, `rmarkdown` by @R-rmarkdown, `dplyr` by @R-dplyr, `knitr` by @R-knitr, and `bookdown` by @R-bookdown. 
+```
+
+```{r}
+sessionInfo()
+```
+
+## References
+
+[^1]: The material is Section [1](#sec1) is modified from the Chapter 2 lab of [An introduction to Statistical Learning](http://www-bcf.usc.edu/~gareth/ISL/ISLR%20Seventh%20Printing.pdf).
+
+[^2]: Use the argument `dpi = 96` inside `include_graphics()`.
+
+[^3]: Use `results = "hide"` in your code chunk to hide the results of `lapply()`.
+
+[^4]: Use the appropriate syntax to cite your references. Otherwise, your **References** will not be generated automatically.
