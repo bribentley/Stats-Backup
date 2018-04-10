@@ -231,7 +231,7 @@ We really think that there are so many errors in this data set because there was
 
 ##Model to predict Brozek
 
-We wanted to get rid of a few columns before running the following tests. By training the data, we are asking it what the best predictor of Brozek Body Fat Percentage is from the rest of the data. There are a few columns that should be taken out to eliminate confounding of the analysis. We decided to take out the columns: case number, body fat siri, density, adiposity, and fat free weight.
+By training the data, we are asking it what the best predictor of Brozek Body Fat Percentage is from the rest of the data. We wanted to get rid of a few columns before running the following tests. There are a few columns that should be taken out to eliminate confounding of the analysis. We decided to take out the columns: case number, body fat siri, density, adiposity, and fat free weight.
 
 ```{r message=FALSE, warning=FALSE}
 noco <- c(1, 3, 4, 8, 9)
