@@ -104,15 +104,15 @@ num1
 There are `r num1` cases where the researchers improperly rounded when computing the adiposity numbers in their data set.
 
 **Plot of Adiposity Given Values vs Adiposity Computed Values**
-{r message=FALSE, warning=FALSE}
+```{r message=FALSE, warning=FALSE}
 library(ggplot2)
 library(plotly)
-p <- ggplot(data = data, aes(newdata$adiposity_index, newdata$computed_and_rounded_adiposity, color = Case_number)) +
+p <- ggplot(data = newdata, aes(adiposity_index,computed_and_rounded_adiposity, color = Case_number)) +
   geom_point()+
-  labs(x="adiposity", y="computed adiposity")
+  labs(x="adiposity", y="computed adiposity")+
   theme_bw()
 ggplotly(p)
-
+```
 
 **Brozek Comparison**
 ```{r}
@@ -142,15 +142,15 @@ num2
 There are `r num2` cases where the researchers improperly rounded when computing the adiposity numbers in their data set.
 
 **Plot of Brozek Given Values vs Brozek Computed Values**
-{r}
+```{r message=FALSE, warning=FALSE}
 library(ggplot2)
-p <- ggplot(data = data, aes(newdata_Brozek$body_fat_Brozek, newdata_Brozek  $computed_and_rounded_brozek, color = Case_number)) +
+p <- ggplot(data = newdata_Brozek, aes(body_fat_Brozek, computed_and_rounded_brozek, color = Case_number)) +
   geom_point()+
-  labs(x="Brozek", y="computed Brozek")
+  labs(x="Brozek", y="computed Brozek")+
   theme_bw()
 library(plotly)
 ggplotly(p)
-
+```
 
 **Siri Comparison**
 ```{r}
@@ -178,14 +178,15 @@ num3
 There are `r num3` cases where the researchers improperly rounded when computing the Siri numbers in their data set.
 
 **Plot of Siri Given Values vs Siri Computed Values**
-{r warning=FALSE, message = FALSE}
+```{r warning=FALSE, message = FALSE}
 library(ggplot2)
-p <- ggplot(data = data, aes(newdata3$body_fat_siri, newdata3$computed_and_rounded_siri, color = Case_number)) +
+p <- ggplot(data = newdata3, aes(body_fat_siri, computed_and_rounded_siri, color = Case_number)) +
   geom_point()+
-  labs(x="Siri", y="computed Siri")
+  labs(x="Siri", y="computed Siri")+
   theme_bw()
 library(plotly)
 ggplotly(p)
+```
 
 **Fat Free Weight Comparison**
 ```{r}
@@ -214,14 +215,15 @@ num4
 There are `r num4` cases where the researchers improperly rounded when computing the Fat Free Weight numbers in their data set.
 
 **Plot of Fat Free Weight Values vs Fat Free Weight Computed Values** 
-{r}
+```{r message=FALSE, warning=FALSE}
 library(ggplot2)
-p <- ggplot(data = data, aes(newdata4$fat_free_wgt, newdata4$computed_and_rounded_ffw, color = Case_number)) +
+p <- ggplot(data = newdata4, aes(fat_free_wgt, computed_and_rounded_ffw, color = Case_number)) +
   geom_point()+
-  labs(x="ffw", y="computed ffw")
+  labs(x="ffw", y="computed ffw")+
   theme_bw()
 library(plotly)
 ggplotly(p)
+```
 
 **Why are there so many errors?**
 
