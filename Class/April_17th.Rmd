@@ -1,0 +1,67 @@
+---
+title: "April 17th"
+output: html_document
+---
+
+###Boston Example to find RMSE
+```{r}
+library(rpart)
+library(MASS)
+head(Boston)
+```
+
+```{r message=FALSE}
+library(caret)
+set.seed(314)
+trainIndex <- createDataPartition(y = Boston$medv, p = 0.5, list = FALSE, times = 1)
+trainn <- Boston[trainIndex,]
+testt <- Boston[-trainIndex,]
+dim(trainn)
+dim(testt)
+
+fitControl <- trainControl(method = "cv", number = 5)
+set.seed(5)
+stepMod <- train(medv ~., data = trainn, method = "leapSeq", trControl = fitControl, verbose = FALSE)
+stepMod
+
+summary(stepMod$finalModel)
+
+yhat <- predict(stepMod, newdata = testt)
+RMSE <- sqrt(mean((testt$medv - yhat)^2))
+RMSE
+```
+
+
+###Trees
+
+look at code and file on ASULearn
+
+```{r}
+train <- sample(1:nrow(Boston), nrow(Boston)/2)
+tree_boston <- rpart(medv ~ ., data = Boston, subset = train)
+summary(tree_boston)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
