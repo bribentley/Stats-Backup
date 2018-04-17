@@ -1,0 +1,14 @@
+---
+title: "ReressionErrorsIC"
+author: "Alan T. Arnholt"
+date: "4/12/2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+* Nice analysis
+
+* At the start of the paper, you remove several rows without a clear explanation for why you are doing so other than to say that they are data entry errors.  It would help the flow of the paper to show why you believe these values are data entry or rounding errors.  I could follow why you might think many were either data entry or rounding errors in the paper but for cases 221, 163, 152, 237, and 148 I did not see in your work a rationale for removing them as either data entry or rounding errors.  I am not saying that the above mentioned cases are not unuusal ... Rather, we need a justification.  
