@@ -120,7 +120,7 @@ $(document).ready(function () {
 
 <h1 class="title toc-ignore">Chapter 12 Problem 2</h1>
 <h4 class="author"><em>Bri Bentley</em></h4>
-<h4 class="date"><em>Mar 27, 2018</em></h4>
+<h4 class="date"><em>Apr 18, 2018</em></h4>
 
 </div>
 
@@ -191,8 +191,9 @@ CI</code></pre>
 </ol>
 <p>We assume that the errors are assumed to be independent, follow a normal distribution with a mean of zero, and have constant variance.</p>
 <p>There is an outlier, data point 4: <span class="math inline">\((11, 2500)\)</span></p>
-<pre class="r"><code>library(car)
-outlierTest(mod)</code></pre>
+<pre class="r"><code>library(car)</code></pre>
+<pre><code>## Loading required package: carData</code></pre>
+<pre class="r"><code>outlierTest(mod)</code></pre>
 <pre><code>##   rstudent unadjusted p-value Bonferonni p
 ## 4 42.11082         1.5825e-22   3.9562e-21</code></pre>
 <pre class="r"><code>#Removing the outlier
@@ -254,7 +255,7 @@ ExpLostRev</code></pre>
 PI</code></pre>
 <pre><code>##        fit      lwr      upr
 ## 1 1603.797 1545.119 1662.474</code></pre>
-<p>The 95% prediction interval of lost revenue when 14 workers are absent due to illness is between <span class="math inline">\((1545.1189599, 1662.4744194)\)</span></p>
+<p>The 95% prediction interval of lost revenue when 14 workers are absent due to illness is between <span class="math inline">\((1545.1189599, 1662.4744194)\)</span>.</p>
 
 
 
