@@ -1,0 +1,30 @@
+Modeling Project
+========================================================
+author: Bri and Charlotte
+date: April 26th
+autosize: true
+
+Original Data
+========================================================
+
+```{r}
+library(readxl)
+SBdataOG <- read_excel("ModelingProject.xlsx")
+head(SBdataOG)
+```
+
+Cleaned Up Data
+========================================================
+
+```{r}
+SBdata <- SBdataOG[,-c(1,3,4)]
+SBdata
+#change dimensions so that slugging percentage isn't cut out????
+```
+
+
+========================================================
+
+```{r}
+
+```

@@ -1,0 +1,155 @@
+---
+title: "STT 5811 Take Home"
+author: "Brianna Bentley"
+date: 'Last compiled: `r format(Sys.time(), "%b %d, %Y")`'
+output: 
+  bookdown::html_document2: 
+    highlight: textmate
+    theme: yeti
+css: MyLab.css
+---
+
+```{r, label = "setup", include=FALSE}
+library(dplyr)
+knitr::opts_chunk$set(comment = NA, warning = FALSE, message = FALSE, fig.align = "center")
+```
+
+<div id="instructions">
+Follow all directions. Type complete sentences to answer all questions inside the `answer` tags provided in the R Markdown document.  Round all numeric answers you report inside the answer tags to four decimal places.  Use inline `R` code to report numeric answers inside the `answer` tags (i.e. do not hard code your numeric answers).  You may discuss general concepts with your classmates; however, you should not discuss individual questions from the take home with anyone other than faculty.  You may use books, notes, and the internet to help you answer the questions.  Replace the _Your Name_ in the YAML with your name (First, Last).  
+</div>
+
+1. Load the package `hflights` and read about the data set.  Display the first 10 rows and 7 columns of `hflights` using the `datatable` function from the `DT` package.
+
+```{r, label = "readin"}
+library(hflights)
+library(DT)
+datatable(head(hflights, 10))
+```
+
+2.  What are the dimensions of the `hflights` data frame?
+
+```{r label = "dimensions"}
+dimensions <- dim(hflights)
+```
+
+<div id="answer">
+The dimensions of the `hflights` data frame are `r dimensions`.
+
+
+</div>
+
+
+3. How many weekend flights flew a distance of more than 1300 miles and had a total taxiing time (`TaxiIn` + `TaxiOut`) below 10 minutes?  
+
+```{r, label = "taxi"}
+library(dplyr)
+WKND <- hflights %>%
+  filter(DayOfWeek == c(1,7) & Distance > 1300 & TaxiIn + TaxiOut < 10)
+number <- nrow(WKND)
+```
+
+<div id="answer">
+`r number ` weekednd flights flew a distance of more than 1300 miles and had a total taxiing time below 10 minutes. 
+
+
+
+</div>
+
+
+4. Create a new data frame Q4B that satisfies the following conditions: a)	Only the carriers `CO` and `XE` are included in the variable `UniqueCarrier`; b) The levels of `UniqueCarrier` are labelled `Continental` and `Express Jet`; c)	A new variable `TotalDelay` is created with `mutate` that is the sum of the arrival and departure delays; d)	Only the flights on Saturday that are between 650 and 720 miles in distance are included (use `filter`).  Once your data frame is created, report its dimensions.
+
+##PART B!!!
+
+```{r}
+Q4B <- hflights %>%
+  filter(UniqueCarrier == c("CO", "XE")) %>%
+  mutate(TotalDelay = ArrDelay + DepDelay) %>%
+  filter(DayOfWeek == "7" & Distance > 650 & Distance < 720)
+dimensionss <- dim(Q4B)
+```
+
+<div id="answer">
+The dimensions of the new Q4B data frame is `r dimensionss`.
+
+
+</div>
+
+
+5. Use the information in `Q4B` to create a density histogram of the total delay time for the carriers `Continental` and `Express Jet`.   Make the range of the $x$-axis -50 to 300 (minutes) for both density histograms.  Superimpose a density curve over each histogram.  Label the $x$-axis `Total Delay (minutes)`.  Use the `fig.cap` option in your code chunk to create a descriptive caption.  Based on the density histograms and appropriate summary measures, characterize the distribution of total delay time for both airlines.  Make sure to reference the appropriate Figure using `\ref@(fig:yourlabelname)` when writing your answer.  See [bookdown: Authoring Books and Technical Documents with R Markdown](https://bookdown.org/yihui/bookdown/) if you need a refresher on using cross-references.
+
+```{r, label = "histodens", fig.cap = "Creative caption", fig.height = 7, fig.width = 7}
+library(ggplot2)
+ggplot(data = Q4B, aes(x = TotalDelay)) +
+  geom_histogram(aes(y=..density..), colour="black", fill="white") + 
+  geom_density(alpha=.2, fill="#FF6666") +
+  facet_grid(.~UniqueCarrier) + 
+  theme_bw() +
+  xlim(-50, 300)+
+  xlab("Total Delay (minutes)")
+CONT <- subset(Q4B, UniqueCarrier == "CO")
+EXPRESS <- subset(Q4B, UniqueCarrier == "XE")
+summary(CONT$TotalDelay)
+dim(CONT)
+summary(EXPRESS$TotalDelay)
+dim(EXPRESS)
+```
+
+<div id="answer">
+Overall, `Express Jet` has more flights than `Continental` in this data set. But even so, the histograms for each Airline Carrier are similar in shape. There is also no significant difference in the five number summaries, but it should be noted that `Express Jet` has a maximum about 200 minutes higher than `Continental`.
+
+
+</div>
+
+
+6. Write out the hypotheses (in English and using appropriate statistical notation) to test if the median total delay time for Express Jet is greater than the median total delay time for Continental.
+
+
+<div id="answer">
+Type your complete sentence answer here. Use appropriate statistical notation.
+
+* Null Hypothesis: The median total delay time for Express Jet is no different than the median total delay time for Continental.
+    + $H_0:$ $\mu_e = \mu_c$
+    
+* Alternative Hypothesis: The median total delay time for Express Jet is different than the median total delay time for Continental.
+    + $H_A:$ $\mu_e \neq \mu_c$
+</div>
+
+7. Test your hypotheses from Question 6 using a randomization approach.    
+
+```{r labe = "nonpar"}
+# type your code for the Problem here and Knit - delete this comment
+# randomization test
+#summary(CONT$TotalDelay)$Median
+#median(EXPRESS$TotalDelay)
+```
+
+<div id="answer">
+Type your complete sentence answer here using inline R code and delete this comment.
+
+
+</div>
+
+
+8.  Construct and interpret a 90% bootstrap percentile confidence interval for the average `AirTime` for Continental minus the average `AirTime` for Express Jet.  Create a density plot of the bootstrapped statistic.  Make sure to reference the appropriate Figure using `\ref@(fig:yourlabelname)` when writing your answer.  
+
+**Extra Credit:** Shade the middle 90% of the density histogram of the bootstrapped statistic purple and label the $x-$ axis $\bar{x}^*_{\text{Continental}} -\bar{x}^*_{\text{ExpressJet}}$. 
+
+```{r, label = "bootperc", fig.cap = "90% bootstrap percentile confidence interval for ..."}
+# type your code for the Problem here and Knit - delete this comment
+
+
+
+
+
+```
+
+
+<div id="answer">
+Type your complete sentence answer here using inline R code and delete this comment.
+
+
+</div>
+
+```{r}
+sessionInfo()
+```
