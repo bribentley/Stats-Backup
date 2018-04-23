@@ -44,7 +44,7 @@ The dimensions of the `hflights` data frame are `r dimensions`.
 ```{r, label = "taxi"}
 library(dplyr)
 WKND <- hflights %>%
-  filter(DayOfWeek == c(1,7) & Distance > 1300 & TaxiIn + TaxiOut < 10)
+  filter(DayOfWeek == c(6,7) & Distance > 1300 & TaxiIn + TaxiOut < 10)
 number <- nrow(WKND)
 ```
 
@@ -64,7 +64,7 @@ number <- nrow(WKND)
 Q4B <- hflights %>%
   filter(UniqueCarrier == c("CO", "XE")) %>%
   mutate(TotalDelay = ArrDelay + DepDelay) %>%
-  filter(DayOfWeek == "7" & Distance > 650 & Distance < 720)
+  filter(DayOfWeek == "6" & Distance > 650 & Distance < 720)
 dimensionss <- dim(Q4B)
 ```
 
@@ -77,7 +77,7 @@ The dimensions of the new Q4B data frame is `r dimensionss`.
 
 5. Use the information in `Q4B` to create a density histogram of the total delay time for the carriers `Continental` and `Express Jet`.   Make the range of the $x$-axis -50 to 300 (minutes) for both density histograms.  Superimpose a density curve over each histogram.  Label the $x$-axis `Total Delay (minutes)`.  Use the `fig.cap` option in your code chunk to create a descriptive caption.  Based on the density histograms and appropriate summary measures, characterize the distribution of total delay time for both airlines.  Make sure to reference the appropriate Figure using `\ref@(fig:yourlabelname)` when writing your answer.  See [bookdown: Authoring Books and Technical Documents with R Markdown](https://bookdown.org/yihui/bookdown/) if you need a refresher on using cross-references.
 
-```{r, label = "histodens", fig.cap = "Creative caption", fig.height = 7, fig.width = 7}
+```{r, label = "histodens", fig.cap = "Airlines can't be trusted!!!", fig.height = 7, fig.width = 7}
 library(ggplot2)
 ggplot(data = Q4B, aes(x = TotalDelay)) +
   geom_histogram(aes(y=..density..), colour="black", fill="white") + 
@@ -95,7 +95,7 @@ dim(EXPRESS)
 ```
 
 <div id="answer">
-Overall, `Express Jet` has more flights than `Continental` in this data set. But even so, the histograms for each Airline Carrier are similar in shape. There is also no significant difference in the five number summaries, but it should be noted that `Express Jet` has a maximum about 200 minutes higher than `Continental`.
+Note that `Express Jet` has more flights than `Continental` in this data set. But even so, the histograms for each Airline Carrier are similar in skewness which can be seen in **Figure 1**. `Continental` has less variability in its ditribution which is expected since it is a smaller data set. There is variation but no significant difference in the five number summaries. It should be noted that `Express Jet` has a maximum about 450 minutes higher than `Continental`. The maximums in both data sets are likely to have affected the means, which is why conducting a hypothesis test based on the medians is a more accurate analysis.
 
 
 </div>
@@ -107,20 +107,24 @@ Overall, `Express Jet` has more flights than `Continental` in this data set. But
 <div id="answer">
 Type your complete sentence answer here. Use appropriate statistical notation.
 
-* Null Hypothesis: The median total delay time for Express Jet is no different than the median total delay time for Continental.
+* Null Hypothesis: The median total delay time for Express Jet is equal to the median total delay time for Continental.
     + $H_0:$ $\mu_e = \mu_c$
     
-* Alternative Hypothesis: The median total delay time for Express Jet is different than the median total delay time for Continental.
-    + $H_A:$ $\mu_e \neq \mu_c$
+* Alternative Hypothesis: The median total delay time for Express Jet is greater than the median total delay time for Continental.
+    + $H_A:$ $\mu_e > \mu_c$
 </div>
 
 7. Test your hypotheses from Question 6 using a randomization approach.    
 
+```{r}
+median(CONT$TotalDelay, na.rm = TRUE)
+median(EXPRESS$TotalDelay, na.rm = TRUE)
+```
+
+
 ```{r labe = "nonpar"}
 # type your code for the Problem here and Knit - delete this comment
-# randomization test
-#summary(CONT$TotalDelay)$Median
-#median(EXPRESS$TotalDelay)
+
 ```
 
 <div id="answer">
