@@ -117,14 +117,22 @@ Type your complete sentence answer here. Use appropriate statistical notation.
 7. Test your hypotheses from Question 6 using a randomization approach.    
 
 ```{r}
-median(CONT$TotalDelay, na.rm = TRUE)
-median(EXPRESS$TotalDelay, na.rm = TRUE)
+medCONT <- median(CONT$TotalDelay, na.rm = TRUE)
+medEXP <- median(EXPRESS$TotalDelay, na.rm = TRUE)
+medCONT
 ```
 
 
 ```{r labe = "nonpar"}
-# type your code for the Problem here and Knit - delete this comment
-
+R <- 1000
+TS <- numeric(R)
+set.seed(123)
+for (i in 1:R) {
+  index <- sample(length(Q4B$TotalDelay), replace = FALSE)
+  TS[i] <- median(Q4B$TotalDelay[index]) - median(Q4B$TotalDelay[-index])
+}
+pvalue <- (sum(TS >= 7) + 1)/(R+1)
+pvalue
 ```
 
 <div id="answer">
