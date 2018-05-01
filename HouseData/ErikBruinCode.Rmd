@@ -1975,8 +1975,8 @@ write.csv(sub_xgb, file = 'XGB_model.csv', row.names = F)
 Since the lasso and XGBoost algorithms are very different, averaging predictions likely improves the scores.
 
 ```{r}
-sub_avg <- data.frame(Id = test_labels, SalePrice = ((.45*predictions_XGB)+(.55*predictions_lasso))/2)
-write.csv(sub_avg, file = 'average.csv', row.names = F)
+sub_avg1 <- data.frame(Id = test_labels, SalePrice = (.355*predictions_XGB + .645*predictions_lasso))
+write.csv(sub_avg1, file = 'average.csv', row.names = F)
 ```
 
 #Next steps
