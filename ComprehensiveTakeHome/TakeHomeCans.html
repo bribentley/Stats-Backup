@@ -129,7 +129,7 @@ $(document).ready(function () {
 
 <h1 class="title toc-ignore">STT 5811 Take Home</h1>
 <h4 class="author"><em>Brianna Bentley</em></h4>
-<h4 class="date"><em>Last compiled: Apr 23, 2018</em></h4>
+<h4 class="date"><em>Last compiled: Apr 25, 2018</em></h4>
 
 </div>
 
@@ -142,9 +142,11 @@ $(document).ready(function () {
 </ol>
 <pre class="r"><code>library(hflights)
 library(DT)
-datatable(head(hflights, 10))</code></pre>
-<div id="htmlwidget-a5bfd62bed1ec7f0f6d9" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-a5bfd62bed1ec7f0f6d9">{"x":{"filter":"none","data":[["5424","5425","5426","5427","5428","5429","5430","5431","5432","5433"],[2011,2011,2011,2011,2011,2011,2011,2011,2011,2011],[1,1,1,1,1,1,1,1,1,1],[1,2,3,4,5,6,7,8,9,10],[6,7,1,2,3,4,5,6,7,1],[1400,1401,1352,1403,1405,1359,1359,1355,1443,1443],[1500,1501,1502,1513,1507,1503,1509,1454,1554,1553],["AA","AA","AA","AA","AA","AA","AA","AA","AA","AA"],[428,428,428,428,428,428,428,428,428,428],["N576AA","N557AA","N541AA","N403AA","N492AA","N262AA","N493AA","N477AA","N476AA","N504AA"],[60,60,70,70,62,64,70,59,71,70],[40,45,48,39,44,45,43,40,41,45],[-10,-9,-8,3,-3,-7,-1,-16,44,43],[0,1,-8,3,5,-1,-1,-5,43,43],["IAH","IAH","IAH","IAH","IAH","IAH","IAH","IAH","IAH","IAH"],["DFW","DFW","DFW","DFW","DFW","DFW","DFW","DFW","DFW","DFW"],[224,224,224,224,224,224,224,224,224,224],[7,6,5,9,9,6,12,7,8,6],[13,9,17,22,9,13,15,12,22,19],[0,0,0,0,0,0,0,0,0,0],["","","","","","","","","",""],[0,0,0,0,0,0,0,0,0,0]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>Year<\/th>\n      <th>Month<\/th>\n      <th>DayofMonth<\/th>\n      <th>DayOfWeek<\/th>\n      <th>DepTime<\/th>\n      <th>ArrTime<\/th>\n      <th>UniqueCarrier<\/th>\n      <th>FlightNum<\/th>\n      <th>TailNum<\/th>\n      <th>ActualElapsedTime<\/th>\n      <th>AirTime<\/th>\n      <th>ArrDelay<\/th>\n      <th>DepDelay<\/th>\n      <th>Origin<\/th>\n      <th>Dest<\/th>\n      <th>Distance<\/th>\n      <th>TaxiIn<\/th>\n      <th>TaxiOut<\/th>\n      <th>Cancelled<\/th>\n      <th>CancellationCode<\/th>\n      <th>Diverted<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,2,3,4,5,6,8,10,11,12,13,16,17,18,19,21]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+hflights2.0 &lt;- hflights %&gt;%
+  select(Year, Month, DayofMonth, DayOfWeek, DepTime, ArrTime, UniqueCarrier)
+datatable(head(hflights2.0, 10))</code></pre>
+<div id="htmlwidget-020e7819db304f19e9b5" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-020e7819db304f19e9b5">{"x":{"filter":"none","data":[["5424","5425","5426","5427","5428","5429","5430","5431","5432","5433"],[2011,2011,2011,2011,2011,2011,2011,2011,2011,2011],[1,1,1,1,1,1,1,1,1,1],[1,2,3,4,5,6,7,8,9,10],[6,7,1,2,3,4,5,6,7,1],[1400,1401,1352,1403,1405,1359,1359,1355,1443,1443],[1500,1501,1502,1513,1507,1503,1509,1454,1554,1553],["AA","AA","AA","AA","AA","AA","AA","AA","AA","AA"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>Year<\/th>\n      <th>Month<\/th>\n      <th>DayofMonth<\/th>\n      <th>DayOfWeek<\/th>\n      <th>DepTime<\/th>\n      <th>ArrTime<\/th>\n      <th>UniqueCarrier<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,2,3,4,5,6]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
 <ol start="2" style="list-style-type: decimal">
 <li>What are the dimensions of the <code>hflights</code> data frame?</li>
 </ol>
@@ -165,18 +167,17 @@ number &lt;- nrow(WKND)</code></pre>
 <ol start="4" style="list-style-type: decimal">
 <li>Create a new data frame Q4B that satisfies the following conditions: a) Only the carriers <code>CO</code> and <code>XE</code> are included in the variable <code>UniqueCarrier</code>; b) The levels of <code>UniqueCarrier</code> are labelled <code>Continental</code> and <code>Express Jet</code>; c) A new variable <code>TotalDelay</code> is created with <code>mutate</code> that is the sum of the arrival and departure delays; d) Only the flights on Saturday that are between 650 and 720 miles in distance are included (use <code>filter</code>). Once your data frame is created, report its dimensions.</li>
 </ol>
-<div id="part-b" class="section level2">
-<h2><span class="header-section-number">0.1</span> PART B!!!</h2>
 <pre class="r"><code>Q4B &lt;- hflights %&gt;%
   filter(UniqueCarrier == c(&quot;CO&quot;, &quot;XE&quot;)) %&gt;%
   mutate(TotalDelay = ArrDelay + DepDelay) %&gt;%
-  filter(DayOfWeek == &quot;6&quot; &amp; Distance &gt; 650 &amp; Distance &lt; 720)
+  filter(DayOfWeek == &quot;6&quot; &amp; Distance &gt; 650 &amp; Distance &lt; 720) #%&gt;%
+  #rename(Q4B$UniqueCarrier, c(&quot;CO&quot; = &quot;Continental&quot;, &quot;XE&quot; = &quot;Express Jet&quot;))
 dimensionss &lt;- dim(Q4B)</code></pre>
 <div id="answer">
 <p>The dimensions of the new Q4B data frame is 342, 22.</p>
 </div>
 <ol start="5" style="list-style-type: decimal">
-<li>Use the information in <code>Q4B</code> to create a density histogram of the total delay time for the carriers <code>Continental</code> and <code>Express Jet</code>. Make the range of the <span class="math inline">\(x\)</span>-axis -50 to 300 (minutes) for both density histograms. Superimpose a density curve over each histogram. Label the <span class="math inline">\(x\)</span>-axis <code>Total Delay (minutes)</code>. Use the <code>fig.cap</code> option in your code chunk to create a descriptive caption. Based on the density histograms and appropriate summary measures, characterize the distribution of total delay time for both airlines. Make sure to reference the appropriate Figure using <code>\ref@(fig:yourlabelname)</code> when writing your answer. See <a href="https://bookdown.org/yihui/bookdown/">bookdown: Authoring Books and Technical Documents with R Markdown</a> if you need a refresher on using cross-references.</li>
+<li>Use the information in <code>Q4B</code> to create a density histogram of the total delay time for the carriers <code>Continental</code> and <code>Express Jet</code>. Make the range of the <span class="math inline">\(x\)</span>-axis -50 to 300 (minutes) for both density histograms. Superimpose a density curve over each histogram. Label the <span class="math inline">\(x\)</span>-axis <code>Total Delay (minutes)</code>. Use the <code>fig.cap</code> option in your code chunk to create a descriptive caption. Based on the density histograms and appropriate summary measures, characterize the distribution of total delay time for both airlines. Make sure to reference the appropriate Figure using <code>\@ref(fig:yourlabelname)</code> when writing your answer. See <a href="https://bookdown.org/yihui/bookdown/">bookdown: Authoring Books and Technical Documents with R Markdown</a> if you need a refresher on using cross-references.</li>
 </ol>
 <pre class="r"><code>library(ggplot2)
 ggplot(data = Q4B, aes(x = TotalDelay)) +
@@ -205,7 +206,7 @@ summary(CONT$TotalDelay)</code></pre>
 <pre class="r"><code>dim(EXPRESS)</code></pre>
 <pre><code>[1] 289  22</code></pre>
 <div id="answer">
-<p>Note that <code>Express Jet</code> has more flights than <code>Continental</code> in this data set. But even so, the histograms for each Airline Carrier are similar in skewness which can be seen in <strong>Figure 1</strong>. <code>Continental</code> has less variability in its ditribution which is expected since it is a smaller data set. There is variation but no significant difference in the five number summaries. It should be noted that <code>Express Jet</code> has a maximum about 450 minutes higher than <code>Continental</code>. The maximums in both data sets are likely to have affected the means, which is why conducting a hypothesis test based on the medians is a more accurate analysis.</p>
+<p>Note that <code>Express Jet</code> has more flights than <code>Continental</code> in this data set. But even so, the histograms for each Airline Carrier are similar in skewness which can be seen in <code>\@ref(fig:histodens)</code>. <code>Continental</code> has less variability in its ditribution which is expected since it is a smaller data set. There is variation but no significant difference in the five number summaries. It should be noted that <code>Express Jet</code> has a maximum about 450 minutes higher than <code>Continental</code>. The maximums in both data sets are likely to have affected the means, which is why conducting a hypothesis test based on the medians is a more accurate analysis.</p>
 </div>
 <ol start="6" style="list-style-type: decimal">
 <li>Write out the hypotheses (in English and using appropriate statistical notation) to test if the median total delay time for Express Jet is greater than the median total delay time for Continental.</li>
@@ -226,28 +227,59 @@ summary(CONT$TotalDelay)</code></pre>
 <ol start="7" style="list-style-type: decimal">
 <li>Test your hypotheses from Question 6 using a randomization approach.</li>
 </ol>
-<pre class="r"><code>medCONT &lt;- median(CONT$TotalDelay, na.rm = TRUE)
-medEXP &lt;- median(EXPRESS$TotalDelay, na.rm = TRUE)
-medCONT</code></pre>
-<pre><code>[1] -6</code></pre>
-<pre class="r"><code>R &lt;- 1000
-TS &lt;- numeric(R)
-set.seed(123)
-for (i in 1:R) {
-  index &lt;- sample(length(Q4B$TotalDelay), replace = FALSE)
-  TS[i] &lt;- median(Q4B$TotalDelay[index]) - median(Q4B$TotalDelay[-index])
+<pre class="r"><code>#Filter out NA values from the above subsets.
+CONT2.0 &lt;- CONT %&gt;%
+  filter(!is.na(TotalDelay))
+EXP2.0 &lt;- EXPRESS %&gt;% 
+  filter(!is.na(TotalDelay))</code></pre>
+<pre class="r"><code>B &lt;- 10^4 - 1
+theta.hatE &lt;- numeric(B)
+set.seed(1)
+for (i in 1:B) {
+  index &lt;- sample(length(CONT), length(CONT)/2, replace = FALSE)
+  theta.hatE[i] &lt;- median(CONT2.0$TotalDelay[index]) - median(EXP2.0$TotalDelay[-index])
 }
-pvalue &lt;- (sum(TS &gt;= 7) + 1)/(R+1)
-pvalue</code></pre>
-<pre><code>[1] NA</code></pre>
+
+PVALUE &lt;- (sum(theta.hatE &gt;= 7)+1)/(B+1)
+PVALUE</code></pre>
+<pre><code>[1] 0.0333</code></pre>
 <div id="answer">
-<p>Type your complete sentence answer here using inline R code and delete this comment.</p>
+<p>So we reject the null in favor of the alternative.</p>
 </div>
 <ol start="8" style="list-style-type: decimal">
-<li>Construct and interpret a 90% bootstrap percentile confidence interval for the average <code>AirTime</code> for Continental minus the average <code>AirTime</code> for Express Jet. Create a density plot of the bootstrapped statistic. Make sure to reference the appropriate Figure using <code>\ref@(fig:yourlabelname)</code> when writing your answer.</li>
+<li>Construct and interpret a 90% bootstrap percentile confidence interval for the average <code>AirTime</code> for Continental minus the average <code>AirTime</code> for Express Jet. Create a density plot of the bootstrapped statistic. Make sure to reference the appropriate Figure using <code>\@ref(fig:yourlabelname)</code> when writing your answer.</li>
 </ol>
+<p>Can’t get this to work!</p>
+<pre class="r"><code>cont &lt;- length(CONT)
+express &lt;- length(EXPRESS)
+N &lt;- 10000
+cont.resamp &lt;- numeric(N)
+express.resamp &lt;- numeric(N)
+
+for (i in 1:N) {
+  s.resample &lt;- sample(CONT, cont, replace = TRUE)
+  cont.resamp[i] &lt;- mean(s.resample)
+  ns.resample &lt;- sample(EXPRESS, express, replace = TRUE)
+  express.resamp[i] &lt;- mean(ns.resample)
+}
+
+diffmeans &lt;- cont.resamp - express.resamp
+#quantile(diffmeans, probs = 0.90)</code></pre>
 <p><strong>Extra Credit:</strong> Shade the middle 90% of the density histogram of the bootstrapped statistic purple and label the <span class="math inline">\(x-\)</span> axis <span class="math inline">\(\bar{x}^*_{\text{Continental}} -\bar{x}^*_{\text{ExpressJet}}\)</span>.</p>
-<pre class="r"><code># type your code for the Problem here and Knit - delete this comment</code></pre>
+<pre class="r"><code>R &lt;- 1000
+TS &lt;- numeric(R)
+
+CI &lt;- quantile(TS, probs = .90)
+CI</code></pre>
+<pre><code>90% 
+  0 </code></pre>
+<pre class="r"><code>#from arnholt's notes
+#p &lt;- ggplot(data = DF, aes(x = x, y = ..density..)) + 
+  #geom_density(fill = &quot;red&quot;, alpha = 0.8) + 
+  #theme_bw()
+#x.dens &lt;- density(TS)
+#df.dens &lt;- data.frame(x = x.dens$x, y = x.dens$y)
+#p + geom_area(data = subset(df.dens, x &gt;= CI[1] &amp; x &lt;= CI[2]), aes(x = x, y = y), fill = &quot;blue&quot;, alpha = .3)</code></pre>
 <div id="answer">
 <p>Type your complete sentence answer here using inline R code and delete this comment.</p>
 </div>
@@ -272,21 +304,20 @@ attached base packages:
 
 other attached packages:
 [1] ggplot2_2.2.1  bindrcpp_0.2.2 DT_0.4         hflights_0.1  
-[5] dplyr_0.7.4   
+[5] plyr_1.8.4     dplyr_0.7.4   
 
 loaded via a namespace (and not attached):
  [1] Rcpp_0.12.16     highr_0.6        pillar_1.2.1     compiler_3.4.3  
- [5] later_0.7.1      plyr_1.8.4       bindr_0.1.1      tools_3.4.3     
- [9] digest_0.6.15    jsonlite_1.5     evaluate_0.10.1  tibble_1.4.2    
-[13] gtable_0.2.0     pkgconfig_2.0.1  rlang_0.2.0      shiny_1.0.5     
-[17] crosstalk_1.0.0  yaml_2.1.18      xfun_0.1         stringr_1.3.0   
-[21] knitr_1.20       htmlwidgets_1.2  rprojroot_1.3-2  grid_3.4.3      
-[25] glue_1.2.0       R6_2.2.2         rmarkdown_1.9    bookdown_0.7    
-[29] reshape2_1.4.3   magrittr_1.5     backports_1.1.2  scales_0.5.0    
-[33] promises_1.0.1   htmltools_0.3.6  assertthat_0.2.0 mime_0.5        
-[37] xtable_1.8-2     colorspace_1.3-2 httpuv_1.4.1     labeling_0.3    
-[41] stringi_1.1.7    lazyeval_0.2.1   munsell_0.4.3   </code></pre>
-</div>
+ [5] later_0.7.1      bindr_0.1.1      tools_3.4.3      digest_0.6.15   
+ [9] jsonlite_1.5     evaluate_0.10.1  tibble_1.4.2     gtable_0.2.0    
+[13] pkgconfig_2.0.1  rlang_0.2.0      shiny_1.0.5      crosstalk_1.0.0 
+[17] yaml_2.1.18      xfun_0.1         stringr_1.3.0    knitr_1.20      
+[21] htmlwidgets_1.2  rprojroot_1.3-2  grid_3.4.3       glue_1.2.0      
+[25] R6_2.2.2         rmarkdown_1.9    bookdown_0.7     reshape2_1.4.3  
+[29] magrittr_1.5     backports_1.1.2  scales_0.5.0     promises_1.0.1  
+[33] htmltools_0.3.6  assertthat_0.2.0 mime_0.5         xtable_1.8-2    
+[37] colorspace_1.3-2 httpuv_1.4.1     labeling_0.3     stringi_1.1.7   
+[41] lazyeval_0.2.1   munsell_0.4.3   </code></pre>
 
 
 

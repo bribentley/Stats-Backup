@@ -11,6 +11,7 @@ css: MyLab.css
 
 ```{r, label = "setup", include=FALSE}
 library(dplyr)
+library(plyr)
 knitr::opts_chunk$set(comment = NA, warning = FALSE, message = FALSE, fig.align = "center")
 ```
 
@@ -23,7 +24,9 @@ Follow all directions. Type complete sentences to answer all questions inside th
 ```{r, label = "readin"}
 library(hflights)
 library(DT)
-datatable(head(hflights, 10))
+hflights2.0 <- hflights %>%
+  select(Year, Month, DayofMonth, DayOfWeek, DepTime, ArrTime, UniqueCarrier)
+datatable(head(hflights2.0, 10))
 ```
 
 2.  What are the dimensions of the `hflights` data frame?
@@ -58,13 +61,12 @@ number <- nrow(WKND)
 
 4. Create a new data frame Q4B that satisfies the following conditions: a)	Only the carriers `CO` and `XE` are included in the variable `UniqueCarrier`; b) The levels of `UniqueCarrier` are labelled `Continental` and `Express Jet`; c)	A new variable `TotalDelay` is created with `mutate` that is the sum of the arrival and departure delays; d)	Only the flights on Saturday that are between 650 and 720 miles in distance are included (use `filter`).  Once your data frame is created, report its dimensions.
 
-##PART B!!!
-
 ```{r}
 Q4B <- hflights %>%
   filter(UniqueCarrier == c("CO", "XE")) %>%
   mutate(TotalDelay = ArrDelay + DepDelay) %>%
-  filter(DayOfWeek == "6" & Distance > 650 & Distance < 720)
+  filter(DayOfWeek == "6" & Distance > 650 & Distance < 720) #%>%
+  #rename(Q4B$UniqueCarrier, c("CO" = "Continental", "XE" = "Express Jet"))
 dimensionss <- dim(Q4B)
 ```
 
@@ -75,7 +77,7 @@ The dimensions of the new Q4B data frame is `r dimensionss`.
 </div>
 
 
-5. Use the information in `Q4B` to create a density histogram of the total delay time for the carriers `Continental` and `Express Jet`.   Make the range of the $x$-axis -50 to 300 (minutes) for both density histograms.  Superimpose a density curve over each histogram.  Label the $x$-axis `Total Delay (minutes)`.  Use the `fig.cap` option in your code chunk to create a descriptive caption.  Based on the density histograms and appropriate summary measures, characterize the distribution of total delay time for both airlines.  Make sure to reference the appropriate Figure using `\ref@(fig:yourlabelname)` when writing your answer.  See [bookdown: Authoring Books and Technical Documents with R Markdown](https://bookdown.org/yihui/bookdown/) if you need a refresher on using cross-references.
+5. Use the information in `Q4B` to create a density histogram of the total delay time for the carriers `Continental` and `Express Jet`.   Make the range of the $x$-axis -50 to 300 (minutes) for both density histograms.  Superimpose a density curve over each histogram.  Label the $x$-axis `Total Delay (minutes)`.  Use the `fig.cap` option in your code chunk to create a descriptive caption.  Based on the density histograms and appropriate summary measures, characterize the distribution of total delay time for both airlines.  Make sure to reference the appropriate Figure using `\@ref(fig:yourlabelname)` when writing your answer.  See [bookdown: Authoring Books and Technical Documents with R Markdown](https://bookdown.org/yihui/bookdown/) if you need a refresher on using cross-references.
 
 ```{r, label = "histodens", fig.cap = "Airlines can't be trusted!!!", fig.height = 7, fig.width = 7}
 library(ggplot2)
@@ -95,7 +97,7 @@ dim(EXPRESS)
 ```
 
 <div id="answer">
-Note that `Express Jet` has more flights than `Continental` in this data set. But even so, the histograms for each Airline Carrier are similar in skewness which can be seen in **Figure 1**. `Continental` has less variability in its ditribution which is expected since it is a smaller data set. There is variation but no significant difference in the five number summaries. It should be noted that `Express Jet` has a maximum about 450 minutes higher than `Continental`. The maximums in both data sets are likely to have affected the means, which is why conducting a hypothesis test based on the medians is a more accurate analysis.
+Note that `Express Jet` has more flights than `Continental` in this data set. But even so, the histograms for each Airline Carrier are similar in skewness which can be seen in `\@ref(fig:histodens)`. `Continental` has less variability in its ditribution which is expected since it is a smaller data set. There is variation but no significant difference in the five number summaries. It should be noted that `Express Jet` has a maximum about 450 minutes higher than `Continental`. The maximums in both data sets are likely to have affected the means, which is why conducting a hypothesis test based on the medians is a more accurate analysis.
 
 
 </div>
@@ -117,42 +119,72 @@ Type your complete sentence answer here. Use appropriate statistical notation.
 7. Test your hypotheses from Question 6 using a randomization approach.    
 
 ```{r}
-medCONT <- median(CONT$TotalDelay, na.rm = TRUE)
-medEXP <- median(EXPRESS$TotalDelay, na.rm = TRUE)
-medCONT
+#Filter out NA values from the above subsets.
+CONT2.0 <- CONT %>%
+  filter(!is.na(TotalDelay))
+EXP2.0 <- EXPRESS %>% 
+  filter(!is.na(TotalDelay))
 ```
 
-
 ```{r labe = "nonpar"}
-R <- 1000
-TS <- numeric(R)
-set.seed(123)
-for (i in 1:R) {
-  index <- sample(length(Q4B$TotalDelay), replace = FALSE)
-  TS[i] <- median(Q4B$TotalDelay[index]) - median(Q4B$TotalDelay[-index])
+B <- 10^4 - 1
+theta.hatE <- numeric(B)
+set.seed(1)
+for (i in 1:B) {
+  index <- sample(length(CONT), length(CONT)/2, replace = FALSE)
+  theta.hatE[i] <- median(CONT2.0$TotalDelay[index]) - median(EXP2.0$TotalDelay[-index])
 }
-pvalue <- (sum(TS >= 7) + 1)/(R+1)
-pvalue
+
+PVALUE <- (sum(theta.hatE >= 7)+1)/(B+1)
+PVALUE
 ```
 
 <div id="answer">
-Type your complete sentence answer here using inline R code and delete this comment.
+So we reject the null in favor of the alternative.
 
 
 </div>
 
 
-8.  Construct and interpret a 90% bootstrap percentile confidence interval for the average `AirTime` for Continental minus the average `AirTime` for Express Jet.  Create a density plot of the bootstrapped statistic.  Make sure to reference the appropriate Figure using `\ref@(fig:yourlabelname)` when writing your answer.  
+8.  Construct and interpret a 90% bootstrap percentile confidence interval for the average `AirTime` for Continental minus the average `AirTime` for Express Jet.  Create a density plot of the bootstrapped statistic.  Make sure to reference the appropriate Figure using `\@ref(fig:yourlabelname)` when writing your answer.  
+
+Can't get this to work!
+
+```{r}
+cont <- length(CONT)
+express <- length(EXPRESS)
+N <- 10000
+cont.resamp <- numeric(N)
+express.resamp <- numeric(N)
+
+for (i in 1:N) {
+  s.resample <- sample(CONT, cont, replace = TRUE)
+  cont.resamp[i] <- mean(s.resample)
+  ns.resample <- sample(EXPRESS, express, replace = TRUE)
+  express.resamp[i] <- mean(ns.resample)
+}
+
+diffmeans <- cont.resamp - express.resamp
+#quantile(diffmeans, probs = 0.90)
+```
+
 
 **Extra Credit:** Shade the middle 90% of the density histogram of the bootstrapped statistic purple and label the $x-$ axis $\bar{x}^*_{\text{Continental}} -\bar{x}^*_{\text{ExpressJet}}$. 
 
 ```{r, label = "bootperc", fig.cap = "90% bootstrap percentile confidence interval for ..."}
-# type your code for the Problem here and Knit - delete this comment
+R <- 1000
+TS <- numeric(R)
 
+CI <- quantile(TS, probs = .90)
+CI
 
-
-
-
+#from arnholt's notes
+#p <- ggplot(data = DF, aes(x = x, y = ..density..)) + 
+  #geom_density(fill = "red", alpha = 0.8) + 
+  #theme_bw()
+#x.dens <- density(TS)
+#df.dens <- data.frame(x = x.dens$x, y = x.dens$y)
+#p + geom_area(data = subset(df.dens, x >= CI[1] & x <= CI[2]), aes(x = x, y = y), fill = "blue", alpha = .3)
 ```
 
 
